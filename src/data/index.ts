@@ -1,18 +1,15 @@
-import { januaryWeeklyPlans, allRecipes, type Recipe, type WeeklyPlan, type DailyMeal, type ShoppingItem, type Ingredient } from './weekly-recipes'
+import { allWeeklyPlans, allRecipes, type Recipe, type WeeklyPlan, type DailyMeal, type ShoppingItem, type Ingredient } from './weekly-recipes'
 
 export type { Recipe, WeeklyPlan, DailyMeal, ShoppingItem, Ingredient }
 
 // 获取指定周的计划
 export function getWeeklyPlan(month: number, week: number): WeeklyPlan | null {
-  if (month === 1) {
-    return januaryWeeklyPlans.find(p => p.week === week) || null
-  }
-  return null
+  return allWeeklyPlans.find(p => p.week === week) || null
 }
 
 // 获取所有周计划
 export function getAllWeeklyPlans(): WeeklyPlan[] {
-  return januaryWeeklyPlans
+  return allWeeklyPlans
 }
 
 // 获取所有食谱

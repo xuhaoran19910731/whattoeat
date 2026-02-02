@@ -71,12 +71,12 @@ export default function WeeklyPlanPage() {
             <ChevronLeft className="w-5 h-5" />
           </button>
           <div className="recipe-card px-8 py-3">
-            <div className="font-bold text-lg">2026年1月 · 第{currentWeek}周</div>
+            <div className="font-bold text-lg">2026年 · 第{currentWeek}周</div>
             <div className="text-sm text-muted-foreground">{weekPlan.dateRange}</div>
           </div>
           <button
-            onClick={() => handleWeekChange(Math.min(5, currentWeek + 1))}
-            disabled={currentWeek >= 5}
+            onClick={() => handleWeekChange(Math.min(9, currentWeek + 1))}
+            disabled={currentWeek >= 9}
             className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
           >
             <ChevronRight className="w-5 h-5" />
