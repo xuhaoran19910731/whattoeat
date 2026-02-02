@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, Filter, X, Clock, Flame, ChefHat } from 'lucide-react'
-import { getAllRecipes, getAllTags, getAllFlavors, searchRecipes } from '../data'
+import { Search, Filter, X, Clock, Flame, ChefHat, Sparkles, Carrot, Lightbulb } from 'lucide-react'
+import { getAllRecipes, getAllTags, getAllFlavors, searchRecipes, getAllIngredients } from '../data'
 import { cn } from '../lib/utils'
 
 const typeFilters = [
@@ -17,17 +17,102 @@ const difficultyFilters = [
   { value: 'hard', label: '困难' },
 ]
 
+// 创意菜谱生成器
+function generateCreativeRecipe(selectedIngredients: string[], selectedTags: string[], selectedFlavor: string): {
+  name: string
+  description: string
+  ingredients: string[]
+  steps: string[]
+  tips: string
+} {
+  // 基础食材映射到烹饪方式
+  const cookingMethods = ['清炒', '红烧', '煎', '炖', '蒸', '凉拌', '爆炒', '焖']
+  const randomMethod = cookingMethods[Math.floor(Math.random() * cookingMethods.length)]
+  
+  // 根据口味选择调味
+  const flavorSeasonings: Record<string, string[]> = {
+    salty: ['盐', '生抽', '蚝油'],
+    spicy: ['辣椒', '花椒', '豆瓣酱'],
+    sour: ['醋', '柠檬汁', '番茄'],
+    sweet: ['糖', '蜂蜜', '番茄酱'],
+    light: ['盐', '鸡精', '香油'],
+    rich: ['酱油', '豆瓣酱', '老抽'],
+  }
+  
+  const seasonings = selectedFlavor !== 'all' 
+    ? flavorSeasonings[selectedFlavor] || flavorSeasonings.salty
+    : flavorSeasonings.salty
+  
+  // 生成菜名
+  const mainIngredient = selectedIngredients[0] || '时蔬'
+  const name = selectedIngredients.length > 1 
+    ? `${randomMethod}${mainIngredient}${selectedIngredients[1]}`
+    : `${randomMethod}${mainIngredient}`
+  
+  // 生成步骤
+  const steps = [
+    `准备食材：${selectedIngredients.length > 0 ? selectedIngredients.join('、') : '根据手边食材准备'}，洗净切好`,
+    `调味准备：${seasonings.join('、')}适量备用`,
+    `热锅凉油，${selectedIngredients.some(i => i.includes('肉') || i.includes('鸡') || i.includes('鱼')) ? '先将肉类炒至变色' : '先爆香葱姜蒜'}`,
+    `加入主要食材翻炒均匀`,
+    `加入调味料，${randomMethod.includes('炖') || randomMethod.includes('焖') ? '小火慢煮15-20分钟' : '大火快炒2-3分钟'}`,
+    `出锅前调味，撒上葱花即可`
+  ]
+  
+  return {
+    name,
+    description: `根据您选择的${selectedIngredients.length > 0 ? '食材' : '条件'}创意搭配，${selectedTags.length > 0 ? `融合${selectedTags.join('、')}特点，` : ''}一道简单美味的家常菜。`,
+    ingredients: [...selectedIngredients, ...seasonings, '葱', '姜', '蒜', '食用油'],
+    steps,
+    tips: selectedFlavor === 'spicy' 
+      ? '可根据个人口味调整辣度，怕辣可减少辣椒用量'
+      : selectedFlavor === 'light'
+      ? '清淡口味注意少油少盐，保留食材原味'
+      : '调味可根据个人喜好适当调整'
+  }
+}
+
 export default function RecipeBrowserPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedType, setSelectedType] = useState('all')
   const [selectedFlavor, setSelectedFlavor] = useState('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState('all')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
+  const [showCreativeRecipe, setShowCreativeRecipe] = useState(false)
   
   const allRecipes = getAllRecipes()
   const allTags = getAllTags()
   const allFlavors = getAllFlavors()
+  const allIngredients = getAllIngredients()
+  
+  // 食材分类
+  const ingredientCategories = useMemo(() => {
+    const categories: Record<string, string[]> = {
+      '肉类': [],
+      '蔬菜': [],
+      '海鲜': [],
+      '豆制品': [],
+      '其他': []
+    }
+    
+    allIngredients.forEach(ing => {
+      if (ing.includes('肉') || ing.includes('鸡') || ing.includes('鸭') || ing.includes('羊') || ing.includes('牛') || ing.includes('排骨')) {
+        categories['肉类'].push(ing)
+      } else if (ing.includes('鱼') || ing.includes('虾') || ing.includes('蟹') || ing.includes('贝')) {
+        categories['海鲜'].push(ing)
+      } else if (ing.includes('豆腐') || ing.includes('豆') && !ing.includes('豆芽')) {
+        categories['豆制品'].push(ing)
+      } else if (['白菜', '萝卜', '土豆', '番茄', '青椒', '西兰花', '山药', '木耳', '蘑菇', '黄瓜', '茄子', '洋葱', '胡萝卜', '芹菜', '菠菜', '生菜', '豆芽'].some(v => ing.includes(v))) {
+        categories['蔬菜'].push(ing)
+      } else if (!['盐', '糖', '酱油', '醋', '料酒', '葱', '姜', '蒜', '油', '粉', '淀粉', '米', '面'].some(s => ing.includes(s))) {
+        categories['其他'].push(ing)
+      }
+    })
+    
+    return categories
+  }, [allIngredients])
   
   const filteredRecipes = useMemo(() => {
     let recipes = searchQuery ? searchRecipes(searchQuery) : allRecipes
@@ -48,8 +133,16 @@ export default function RecipeBrowserPage() {
       recipes = recipes.filter(r => selectedTags.some(tag => r.tags.includes(tag)))
     }
     
+    if (selectedIngredients.length > 0) {
+      recipes = recipes.filter(r => 
+        selectedIngredients.some(ing => 
+          r.ingredients.some(i => i.name.includes(ing))
+        )
+      )
+    }
+    
     return recipes
-  }, [searchQuery, selectedType, selectedFlavor, selectedDifficulty, selectedTags, allRecipes])
+  }, [searchQuery, selectedType, selectedFlavor, selectedDifficulty, selectedTags, selectedIngredients, allRecipes])
   
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -59,15 +152,25 @@ export default function RecipeBrowserPage() {
     )
   }
   
+  const toggleIngredient = (ingredient: string) => {
+    setSelectedIngredients(prev =>
+      prev.includes(ingredient)
+        ? prev.filter(i => i !== ingredient)
+        : [...prev, ingredient]
+    )
+  }
+  
   const clearFilters = () => {
     setSearchQuery('')
     setSelectedType('all')
     setSelectedFlavor('all')
     setSelectedDifficulty('all')
     setSelectedTags([])
+    setSelectedIngredients([])
+    setShowCreativeRecipe(false)
   }
   
-  const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedFlavor !== 'all' || selectedDifficulty !== 'all' || selectedTags.length > 0
+  const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedFlavor !== 'all' || selectedDifficulty !== 'all' || selectedTags.length > 0 || selectedIngredients.length > 0
 
   const flavorLabels: Record<string, string> = {
     salty: '咸鲜', spicy: '麻辣', sour: '酸爽', sweet: '酸甜', light: '清淡', rich: '浓郁'
@@ -78,6 +181,12 @@ export default function RecipeBrowserPage() {
     medium: { label: '中等', color: 'text-secondary' },
     hard: { label: '困难', color: 'text-autumn' },
   }
+
+  // 生成创意菜谱
+  const creativeRecipe = useMemo(() => {
+    if (!showCreativeRecipe) return null
+    return generateCreativeRecipe(selectedIngredients, selectedTags, selectedFlavor)
+  }, [showCreativeRecipe, selectedIngredients, selectedTags, selectedFlavor])
 
   return (
     <div className="min-h-screen py-8">
@@ -141,6 +250,39 @@ export default function RecipeBrowserPage() {
                     >
                       {filter.label}
                     </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Ingredient Filter - NEW */}
+              <div className="mb-4">
+                <h4 className="font-medium mb-2 text-sm text-muted-foreground flex items-center gap-2">
+                  <Carrot className="w-4 h-4" />
+                  食材
+                </h4>
+                <div className="space-y-3">
+                  {Object.entries(ingredientCategories).map(([category, ingredients]) => (
+                    ingredients.length > 0 && (
+                      <div key={category}>
+                        <div className="text-xs text-muted-foreground mb-1.5">{category}</div>
+                        <div className="flex flex-wrap gap-2">
+                          {ingredients.slice(0, 8).map((ing) => (
+                            <button
+                              key={ing}
+                              onClick={() => toggleIngredient(ing)}
+                              className={cn(
+                                'px-3 py-1.5 rounded-full text-sm font-medium transition-all',
+                                selectedIngredients.includes(ing)
+                                  ? 'bg-primary text-primary-foreground'
+                                  : 'bg-muted hover:bg-muted/80'
+                              )}
+                            >
+                              {ing}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )
                   ))}
                 </div>
               </div>
@@ -233,10 +375,82 @@ export default function RecipeBrowserPage() {
           )}
         </div>
         
-        {/* Results Count */}
-        <div className="mb-6 text-muted-foreground">
-          共找到 <span className="font-semibold text-foreground">{filteredRecipes.length}</span> 道食谱
+        {/* Results Count & Creative Button */}
+        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+          <div className="text-muted-foreground">
+            共找到 <span className="font-semibold text-foreground">{filteredRecipes.length}</span> 道食谱
+          </div>
+          
+          {/* Creative Recipe Button */}
+          {hasActiveFilters && (
+            <button
+              onClick={() => setShowCreativeRecipe(!showCreativeRecipe)}
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all',
+                showCreativeRecipe 
+                  ? 'bg-gradient-to-r from-secondary to-primary text-white shadow-glow' 
+                  : 'bg-gradient-to-r from-secondary/20 to-primary/20 hover:from-secondary/30 hover:to-primary/30'
+              )}
+            >
+              <Sparkles className="w-5 h-5" />
+              创意搭配
+            </button>
+          )}
         </div>
+        
+        {/* Creative Recipe Card */}
+        {showCreativeRecipe && creativeRecipe && (
+          <div className="recipe-card p-6 mb-8 border-2 border-secondary/30 bg-gradient-to-br from-secondary/5 to-primary/5 animate-scale-in">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center flex-shrink-0">
+                <Lightbulb className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary/20 text-secondary">创意推荐</span>
+                </div>
+                <h3 className="text-xl font-bold">{creativeRecipe.name}</h3>
+                <p className="text-muted-foreground text-sm mt-1">{creativeRecipe.description}</p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold mb-2 flex items-center gap-2">
+                  <Carrot className="w-4 h-4 text-primary" />
+                  所需食材
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {creativeRecipe.ingredients.map((ing, i) => (
+                    <span key={i} className="px-3 py-1 bg-muted rounded-full text-sm">
+                      {ing}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-2 flex items-center gap-2">
+                  <ChefHat className="w-4 h-4 text-primary" />
+                  烹饪步骤
+                </h4>
+                <ol className="space-y-1.5 text-sm">
+                  {creativeRecipe.steps.map((step, i) => (
+                    <li key={i} className="flex gap-2">
+                      <span className="font-semibold text-primary">{i + 1}.</span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+            
+            <div className="mt-4 p-3 bg-primary/10 rounded-lg text-sm">
+              <span className="font-semibold text-primary">小贴士：</span>
+              <span className="text-muted-foreground">{creativeRecipe.tips}</span>
+            </div>
+          </div>
+        )}
         
         {/* Recipe Grid */}
         {filteredRecipes.length > 0 ? (
@@ -303,11 +517,20 @@ export default function RecipeBrowserPage() {
             <div className="text-6xl mb-4">🔍</div>
             <h4 className="text-xl font-semibold mb-2">未找到匹配的食谱</h4>
             <p className="text-muted-foreground mb-4">
-              尝试调整搜索条件或清除筛选
+              尝试点击"创意搭配"按钮，我们会根据您选择的条件生成一道菜谱
             </p>
-            <button onClick={clearFilters} className="btn-primary">
-              清除筛选
-            </button>
+            <div className="flex items-center justify-center gap-4">
+              <button onClick={clearFilters} className="btn-outline">
+                清除筛选
+              </button>
+              <button 
+                onClick={() => setShowCreativeRecipe(true)}
+                className="btn-primary flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                创意搭配
+              </button>
+            </div>
           </div>
         )}
       </div>

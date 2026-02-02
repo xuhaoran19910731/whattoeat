@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Calendar, UtensilsCrossed, Calculator, ShoppingCart, ArrowRight, Snowflake, ChefHat } from 'lucide-react'
-import { getWeeklyPlan, categorizeShoppingList } from '../data'
+import { Calendar, UtensilsCrossed, Calculator, ShoppingCart, ArrowRight, Snowflake, ChefHat, Sun, Moon } from 'lucide-react'
+import { getWeeklyPlan, categorizeShoppingList, getTodayMeal, getBeijingDate } from '../data'
 import { getCurrentSeason, getSeasonName } from '../lib/utils'
 
 const features = [
@@ -28,8 +28,15 @@ const features = [
 
 export default function HomePage() {
   const currentSeason = getCurrentSeason()
-  const week1 = getWeeklyPlan(1)
+  const todayData = getTodayMeal()
+  const beijingDate = getBeijingDate()
+  const week1 = todayData?.weekPlan || getWeeklyPlan(1)
   const categorizedList = week1 ? categorizeShoppingList(week1.shoppingList) : {}
+
+  // 格式化北京时间日期
+  const dateStr = `${beijingDate.getMonth() + 1}月${beijingDate.getDate()}日`
+  const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  const weekdayStr = weekdays[beijingDate.getDay()]
 
   return (
     <div className="min-h-screen">
@@ -66,6 +73,94 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Today's Meal - 今日食谱 */}
+      {todayData && (
+        <section className="py-16 bg-gradient-to-b from-primary/5 to-transparent">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-4">
+                <Calendar className="w-5 h-5" />
+                北京时间 · {dateStr} {weekdayStr}
+              </div>
+              <h2 className="section-title">今日食谱</h2>
+              <p className="section-subtitle mx-auto">第{todayData.weekNumber}周 · 为您精心搭配的今日美味</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* 午餐 */}
+              <div className="recipe-card p-6 animate-slide-up">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center">
+                    <Sun className="w-6 h-6 text-secondary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">午餐</h3>
+                    <p className="text-sm text-muted-foreground">主食: {todayData.todayMeal.lunch.staple === 'rice' ? '米饭' : todayData.todayMeal.lunch.staple === 'noodle' ? '面条' : '米饭/面条'}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Link to={`/recipe/${todayData.todayMeal.lunch.main.id}`} className="block p-4 bg-secondary/10 rounded-xl hover:bg-secondary/20 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-secondary font-medium mb-1">主菜</div>
+                        <div className="font-semibold text-lg">{todayData.todayMeal.lunch.main.name}</div>
+                        <div className="text-sm text-muted-foreground mt-1">{todayData.todayMeal.lunch.main.cookTime}分钟 · {todayData.todayMeal.lunch.main.nutrition.calories}kcal</div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+                  <Link to={`/recipe/${todayData.todayMeal.lunch.side.id}`} className="block p-4 bg-muted/50 rounded-xl hover:bg-muted transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-muted-foreground font-medium mb-1">配菜</div>
+                        <div className="font-medium">{todayData.todayMeal.lunch.side.name}</div>
+                        <div className="text-sm text-muted-foreground mt-1">{todayData.todayMeal.lunch.side.cookTime}分钟 · {todayData.todayMeal.lunch.side.nutrition.calories}kcal</div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              
+              {/* 晚餐 */}
+              <div className="recipe-card p-6 animate-slide-up animate-delay-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-winter/20 flex items-center justify-center">
+                    <Moon className="w-6 h-6 text-winter" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">晚餐</h3>
+                    <p className="text-sm text-muted-foreground">主食: {todayData.todayMeal.dinner.staple === 'rice' ? '米饭' : todayData.todayMeal.dinner.staple === 'noodle' ? '面条' : '米饭/面条'}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Link to={`/recipe/${todayData.todayMeal.dinner.main.id}`} className="block p-4 bg-winter/10 rounded-xl hover:bg-winter/20 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-winter font-medium mb-1">主菜</div>
+                        <div className="font-semibold text-lg">{todayData.todayMeal.dinner.main.name}</div>
+                        <div className="text-sm text-muted-foreground mt-1">{todayData.todayMeal.dinner.main.cookTime}分钟 · {todayData.todayMeal.dinner.main.nutrition.calories}kcal</div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+                  <Link to={`/recipe/${todayData.todayMeal.dinner.side.id}`} className="block p-4 bg-muted/50 rounded-xl hover:bg-muted transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-muted-foreground font-medium mb-1">配菜</div>
+                        <div className="font-medium">{todayData.todayMeal.dinner.side.name}</div>
+                        <div className="text-sm text-muted-foreground mt-1">{todayData.todayMeal.dinner.side.cookTime}分钟 · {todayData.todayMeal.dinner.side.nutrition.calories}kcal</div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Features */}
       <section className="py-16">
