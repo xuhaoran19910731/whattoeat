@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Sun, Moon, ShoppingCart, Check, Copy, Printer, Clock, Flame } from 'lucide-react'
-import { getWeeklyPlan, categorizeShoppingList, type Recipe } from '../data'
+import { ChevronLeft, ChevronRight, Sun, Moon, ShoppingCart, Check, Copy, Printer, Clock, Flame, Store } from 'lucide-react'
+import { getWeeklyPlan, categorizeShoppingList, getRecipeSupermarketMatch, isIngredientInSupermarket, type Recipe } from '../data'
 import { cn } from '../lib/utils'
 
 const stapleLabels = {
@@ -240,24 +240,39 @@ export default function WeeklyPlanPage() {
                     <span className="text-sm font-normal text-muted-foreground ml-auto">{items.length}种</span>
                   </h3>
                   <ul className="space-y-3">
-                    {items.map((item, i) => (
-                      <li key={i} className="flex items-start justify-between gap-2 pb-3 border-b border-border last:border-0 last:pb-0">
-                        <div className="flex-1">
-                          <div className="font-medium">{item.name}</div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            用于: {item.usedIn.join('、')}
-                          </div>
-                          {item.buyTip && (
-                            <div className="text-xs text-primary mt-1">
-                              💡 {item.buyTip}
+                    {items.map((item, i) => {
+                      const supermarketInfo = isIngredientInSupermarket(item.name)
+                      return (
+                        <li key={i} className="flex items-start justify-between gap-2 pb-3 border-b border-border last:border-0 last:pb-0">
+                          <div className="flex-1">
+                            <div className="font-medium flex items-center gap-2">
+                              {item.name}
+                              {supermarketInfo.available && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500 text-white">
+                                  {supermarketInfo.supermarkets.map(s => s === 'penny' ? 'P' : s === 'kaufland' ? 'K' : 'R').join(',')}
+                                </span>
+                              )}
                             </div>
-                          )}
-                        </div>
-                        <div className="text-sm font-medium text-primary whitespace-nowrap">
-                          {item.totalAmount}
-                        </div>
-                      </li>
-                    ))}
+                            <div className="text-xs text-muted-foreground mt-1">
+                              用于: {item.usedIn.join('、')}
+                            </div>
+                            {item.buyTip && (
+                              <div className="text-xs text-primary mt-1">
+                                💡 {item.buyTip}
+                              </div>
+                            )}
+                            {supermarketInfo.available && (
+                              <div className="text-xs text-green-600 mt-1">
+                                ✓ 德国超市有售
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-sm font-medium text-primary whitespace-nowrap">
+                            {item.totalAmount}
+                          </div>
+                        </li>
+                      )
+                    })}
                   </ul>
                 </div>
               ))}
@@ -354,11 +369,24 @@ function RecipePreview({ recipe, type }: { recipe: Recipe; type: string }) {
     rich: '浓郁',
   }
   
+  const supermarketMatch = getRecipeSupermarketMatch(recipe)
+  
   return (
     <Link to={`/recipe/${recipe.id}`} className="block p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors group">
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
         <span className="px-2 py-0.5 rounded text-xs bg-primary/10 text-primary font-medium">{type}</span>
         <span className="px-2 py-0.5 rounded text-xs bg-secondary/10 text-secondary font-medium">{flavorLabels[recipe.flavor]}</span>
+        {supermarketMatch.matchRate > 0 && (
+          <span className={cn(
+            'px-2 py-0.5 rounded text-xs font-medium flex items-center gap-1',
+            supermarketMatch.matchRate >= 80 ? 'bg-green-100 text-green-700' :
+            supermarketMatch.matchRate >= 50 ? 'bg-yellow-100 text-yellow-700' :
+            'bg-red-100 text-red-700'
+          )}>
+            <Store className="w-3 h-3" />
+            {supermarketMatch.matchRate}%
+          </span>
+        )}
       </div>
       <h4 className="font-bold mb-2 group-hover:text-primary transition-colors">{recipe.name}</h4>
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -371,6 +399,12 @@ function RecipePreview({ recipe, type }: { recipe: Recipe; type: string }) {
           {recipe.nutrition.calories}kcal
         </span>
       </div>
+      {supermarketMatch.availableIngredients.length > 0 && (
+        <div className="mt-2 text-xs text-green-600">
+          超市有售: {supermarketMatch.availableIngredients.slice(0, 3).join('、')}
+          {supermarketMatch.availableIngredients.length > 3 && `等${supermarketMatch.availableIngredients.length}种`}
+        </div>
+      )}
       <div className="flex flex-wrap gap-1 mt-2">
         {recipe.tags.slice(0, 2).map(tag => (
           <span key={tag} className="text-xs px-2 py-0.5 bg-background rounded">{tag}</span>

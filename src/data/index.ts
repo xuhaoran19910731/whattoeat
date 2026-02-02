@@ -1,6 +1,80 @@
 import { allWeeklyPlans, allRecipes, type Recipe, type WeeklyPlan, type DailyMeal, type ShoppingItem, type Ingredient } from './weekly-recipes'
+import { supermarketItems } from './german-supermarket'
 
 export type { Recipe, WeeklyPlan, DailyMeal, ShoppingItem, Ingredient }
+
+// 检查食材是否在德国超市有售
+export function isIngredientInSupermarket(ingredientName: string): { available: boolean; supermarkets: string[] } {
+  const matched = supermarketItems.find(item => 
+    ingredientName.includes(item.name) || 
+    item.name.includes(ingredientName) ||
+    ingredientName === item.name
+  )
+  return matched 
+    ? { available: true, supermarkets: matched.supermarkets }
+    : { available: false, supermarkets: [] }
+}
+
+// 计算食谱的超市匹配度
+export function getRecipeSupermarketMatch(recipe: Recipe): {
+  matchRate: number  // 匹配率 0-100
+  availableCount: number  // 超市有售食材数
+  totalCount: number  // 总食材数（不含调味料）
+  availableIngredients: string[]  // 超市有售的食材
+  unavailableIngredients: string[]  // 超市没有的食材
+} {
+  // 只统计非调味料的食材
+  const mainIngredients = recipe.ingredients.filter(i => 
+    i.category !== 'seasoning' && i.category !== 'staple'
+  )
+  
+  const available: string[] = []
+  const unavailable: string[] = []
+  
+  mainIngredients.forEach(ing => {
+    const match = isIngredientInSupermarket(ing.name)
+    if (match.available) {
+      available.push(ing.name)
+    } else {
+      unavailable.push(ing.name)
+    }
+  })
+  
+  const totalCount = mainIngredients.length
+  const matchRate = totalCount > 0 ? Math.round((available.length / totalCount) * 100) : 0
+  
+  return {
+    matchRate,
+    availableCount: available.length,
+    totalCount,
+    availableIngredients: available,
+    unavailableIngredients: unavailable
+  }
+}
+
+// 获取智能推荐食谱（优先超市食材）
+export function getSmartRecommendedRecipes(count: number = 10): Recipe[] {
+  const recipesWithMatch = allRecipes.map(recipe => ({
+    recipe,
+    match: getRecipeSupermarketMatch(recipe)
+  }))
+  
+  // 按匹配度排序，高匹配度优先
+  recipesWithMatch.sort((a, b) => {
+    // 首先按匹配率排序
+    if (b.match.matchRate !== a.match.matchRate) {
+      return b.match.matchRate - a.match.matchRate
+    }
+    // 匹配率相同时，按营养评分（卡路里适中）
+    const aCalories = a.recipe.nutrition.calories
+    const bCalories = b.recipe.nutrition.calories
+    const aScore = Math.abs(400 - aCalories) // 400kcal为理想值
+    const bScore = Math.abs(400 - bCalories)
+    return aScore - bScore
+  })
+  
+  return recipesWithMatch.slice(0, count).map(r => r.recipe)
+}
 
 // 获取指定周的计划
 export function getWeeklyPlan(week: number): WeeklyPlan | null {
