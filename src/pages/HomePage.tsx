@@ -105,7 +105,7 @@ export default function HomePage() {
                 <div key={index} className="recipe-card p-4 animate-scale-in" style={{ animationDelay: `${index * 50}ms` }}>
                   <div className="text-center mb-3">
                     <div className="text-xs text-muted-foreground">{meal.weekday}</div>
-                    <div className="font-bold">{meal.day}日</div>
+                    <div className="font-bold text-sm">{meal.date}</div>
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="p-2 bg-secondary/10 rounded-lg">
