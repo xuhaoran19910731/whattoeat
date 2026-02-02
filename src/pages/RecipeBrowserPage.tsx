@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, Filter, X, Clock, Flame, ChefHat, Sparkles, Carrot, Lightbulb } from 'lucide-react'
+import { Search, Filter, X, Clock, Flame, ChefHat, Sparkles, Carrot, Lightbulb, ShoppingCart, Tag } from 'lucide-react'
 import { getAllRecipes, getAllTags, getAllFlavors, searchRecipes, getAllIngredients } from '../data'
+import { supermarketItems, supermarketInfo, type SupermarketItem } from '../data/german-supermarket'
 import { cn } from '../lib/utils'
 
 const typeFilters = [
@@ -79,6 +80,8 @@ export default function RecipeBrowserPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState('all')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
+  const [selectedSupermarket, setSelectedSupermarket] = useState<'all' | 'penny' | 'kaufland' | 'rewe'>('all')
+  const [selectedSupermarketIngredients, setSelectedSupermarketIngredients] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
   const [showCreativeRecipe, setShowCreativeRecipe] = useState(false)
   
@@ -86,6 +89,23 @@ export default function RecipeBrowserPage() {
   const allTags = getAllTags()
   const allFlavors = getAllFlavors()
   const allIngredients = getAllIngredients()
+  
+  // 德国超市食材按分类整理
+  const supermarketIngredientsByCategory = useMemo(() => {
+    const filtered = selectedSupermarket === 'all' 
+      ? supermarketItems 
+      : supermarketItems.filter(item => item.supermarkets.includes(selectedSupermarket))
+    
+    const categories: Record<string, SupermarketItem[]> = {
+      '蔬菜': filtered.filter(i => i.category === 'vegetable'),
+      '肉类': filtered.filter(i => i.category === 'meat'),
+      '海鲜': filtered.filter(i => i.category === 'seafood'),
+      '水果': filtered.filter(i => i.category === 'fruit'),
+      '乳蛋': filtered.filter(i => i.category === 'dairy'),
+      '其他': filtered.filter(i => i.category === 'other'),
+    }
+    return categories
+  }, [selectedSupermarket])
   
   // 食材分类
   const ingredientCategories = useMemo(() => {
@@ -141,8 +161,17 @@ export default function RecipeBrowserPage() {
       )
     }
     
+    // 超市食材筛选
+    if (selectedSupermarketIngredients.length > 0) {
+      recipes = recipes.filter(r =>
+        selectedSupermarketIngredients.some(smIng =>
+          r.ingredients.some(i => i.name.includes(smIng))
+        )
+      )
+    }
+    
     return recipes
-  }, [searchQuery, selectedType, selectedFlavor, selectedDifficulty, selectedTags, selectedIngredients, allRecipes])
+  }, [searchQuery, selectedType, selectedFlavor, selectedDifficulty, selectedTags, selectedIngredients, selectedSupermarketIngredients, allRecipes])
   
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -160,6 +189,14 @@ export default function RecipeBrowserPage() {
     )
   }
   
+  const toggleSupermarketIngredient = (ingredient: string) => {
+    setSelectedSupermarketIngredients(prev =>
+      prev.includes(ingredient)
+        ? prev.filter(i => i !== ingredient)
+        : [...prev, ingredient]
+    )
+  }
+  
   const clearFilters = () => {
     setSearchQuery('')
     setSelectedType('all')
@@ -167,10 +204,12 @@ export default function RecipeBrowserPage() {
     setSelectedDifficulty('all')
     setSelectedTags([])
     setSelectedIngredients([])
+    setSelectedSupermarket('all')
+    setSelectedSupermarketIngredients([])
     setShowCreativeRecipe(false)
   }
   
-  const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedFlavor !== 'all' || selectedDifficulty !== 'all' || selectedTags.length > 0 || selectedIngredients.length > 0
+  const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedFlavor !== 'all' || selectedDifficulty !== 'all' || selectedTags.length > 0 || selectedIngredients.length > 0 || selectedSupermarketIngredients.length > 0
 
   const flavorLabels: Record<string, string> = {
     salty: '咸鲜', spicy: '麻辣', sour: '酸爽', sweet: '酸甜', light: '清淡', rich: '浓郁'
@@ -278,6 +317,75 @@ export default function RecipeBrowserPage() {
                               )}
                             >
                               {ing}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+              
+              {/* German Supermarket Ingredients */}
+              <div className="mb-4 p-4 rounded-xl bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 border border-red-100 dark:border-red-900/30">
+                <h4 className="font-medium mb-3 text-sm flex items-center gap-2">
+                  <ShoppingCart className="w-4 h-4 text-red-500" />
+                  <span>德国超市本周上市</span>
+                  <span className="px-2 py-0.5 rounded-full text-xs bg-red-500 text-white">促销</span>
+                </h4>
+                
+                {/* Supermarket Selector */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <button
+                    onClick={() => setSelectedSupermarket('all')}
+                    className={cn(
+                      'px-3 py-1.5 rounded-full text-xs font-medium transition-all border',
+                      selectedSupermarket === 'all'
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                    )}
+                  >
+                    全部超市
+                  </button>
+                  {(['penny', 'kaufland', 'rewe'] as const).map((market) => (
+                    <button
+                      key={market}
+                      onClick={() => setSelectedSupermarket(market)}
+                      className={cn(
+                        'px-3 py-1.5 rounded-full text-xs font-medium transition-all border',
+                        selectedSupermarket === market
+                          ? `${supermarketInfo[market].bgColor} text-white border-transparent`
+                          : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                      )}
+                    >
+                      {supermarketInfo[market].name}
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Supermarket Ingredients by Category */}
+                <div className="space-y-3">
+                  {Object.entries(supermarketIngredientsByCategory).map(([category, items]) => (
+                    items.length > 0 && (
+                      <div key={category}>
+                        <div className="text-xs text-muted-foreground mb-1.5">{category}</div>
+                        <div className="flex flex-wrap gap-2">
+                          {items.map((item) => (
+                            <button
+                              key={item.name}
+                              onClick={() => toggleSupermarketIngredient(item.name)}
+                              className={cn(
+                                'px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5',
+                                selectedSupermarketIngredients.includes(item.name)
+                                  ? 'bg-red-500 text-white'
+                                  : 'bg-white text-gray-700 border border-gray-200 hover:border-red-300 hover:bg-red-50'
+                              )}
+                            >
+                              {item.name}
+                              {item.onSale && <Tag className="w-3 h-3" />}
+                              <span className="opacity-60 text-[10px]">
+                                {item.supermarkets.map(s => supermarketInfo[s].name[0]).join('·')}
+                              </span>
                             </button>
                           ))}
                         </div>
