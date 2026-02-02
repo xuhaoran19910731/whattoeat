@@ -3,7 +3,7 @@ import { allWeeklyPlans, allRecipes, type Recipe, type WeeklyPlan, type DailyMea
 export type { Recipe, WeeklyPlan, DailyMeal, ShoppingItem, Ingredient }
 
 // 获取指定周的计划
-export function getWeeklyPlan(month: number, week: number): WeeklyPlan | null {
+export function getWeeklyPlan(week: number): WeeklyPlan | null {
   return allWeeklyPlans.find(p => p.week === week) || null
 }
 

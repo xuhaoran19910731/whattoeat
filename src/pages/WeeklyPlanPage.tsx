@@ -16,7 +16,7 @@ export default function WeeklyPlanPage() {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0)
   const [copiedList, setCopiedList] = useState(false)
   
-  const weekPlan = getWeeklyPlan(1, currentWeek)
+  const weekPlan = getWeeklyPlan(currentWeek)
   
   if (!weekPlan) {
     return (

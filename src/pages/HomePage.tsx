@@ -28,7 +28,7 @@ const features = [
 
 export default function HomePage() {
   const currentSeason = getCurrentSeason()
-  const week1 = getWeeklyPlan(1, 1)
+  const week1 = getWeeklyPlan(1)
   const categorizedList = week1 ? categorizeShoppingList(week1.shoppingList) : {}
 
   return (
