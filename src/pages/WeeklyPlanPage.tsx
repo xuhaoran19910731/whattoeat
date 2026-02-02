@@ -13,7 +13,7 @@ const stapleLabels = {
 export default function WeeklyPlanPage() {
   const [currentWeek, setCurrentWeek] = useState(1)
   const [activeTab, setActiveTab] = useState<'meals' | 'shopping'>('meals')
-  const [selectedDay, setSelectedDay] = useState(1)
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0)
   const [copiedList, setCopiedList] = useState(false)
   
   const weekPlan = getWeeklyPlan(1, currentWeek)
@@ -25,7 +25,7 @@ export default function WeeklyPlanPage() {
           <div className="recipe-card p-12 text-center">
             <div className="text-6xl mb-4">📅</div>
             <h1 className="text-2xl font-bold mb-2">该周暂无食谱</h1>
-            <p className="text-muted-foreground">目前仅提供1月第1周的食谱</p>
+            <p className="text-muted-foreground">目前仅提供1月食谱</p>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@ export default function WeeklyPlanPage() {
   }
   
   const categorizedList = categorizeShoppingList(weekPlan.shoppingList)
-  const selectedMeal = weekPlan.meals.find(m => m.day === selectedDay)
+  const selectedMeal = weekPlan.meals[selectedDayIndex]
   
   const copyShoppingList = () => {
     const text = Object.entries(categorizedList)
@@ -45,6 +45,11 @@ export default function WeeklyPlanPage() {
     navigator.clipboard.writeText(text)
     setCopiedList(true)
     setTimeout(() => setCopiedList(false), 2000)
+  }
+
+  const handleWeekChange = (newWeek: number) => {
+    setCurrentWeek(newWeek)
+    setSelectedDayIndex(0)
   }
 
   return (
@@ -59,19 +64,19 @@ export default function WeeklyPlanPage() {
         {/* Week Navigation */}
         <div className="flex items-center justify-center gap-4 mb-8">
           <button
-            onClick={() => setCurrentWeek(Math.max(1, currentWeek - 1))}
+            onClick={() => handleWeekChange(Math.max(1, currentWeek - 1))}
             disabled={currentWeek === 1}
             className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <div className="recipe-card px-8 py-3">
-            <div className="font-bold text-lg">第{currentWeek}周</div>
+            <div className="font-bold text-lg">2026年1月 · 第{currentWeek}周</div>
             <div className="text-sm text-muted-foreground">{weekPlan.dateRange}</div>
           </div>
           <button
-            onClick={() => setCurrentWeek(currentWeek + 1)}
-            disabled={currentWeek >= 1} // 目前只有1周
+            onClick={() => handleWeekChange(Math.min(5, currentWeek + 1))}
+            disabled={currentWeek >= 5}
             className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
           >
             <ChevronRight className="w-5 h-5" />
@@ -111,27 +116,27 @@ export default function WeeklyPlanPage() {
               <div className="recipe-card p-4 sticky top-24">
                 <h3 className="font-bold mb-4">选择日期</h3>
                 <div className="space-y-2">
-                  {weekPlan.meals.map((meal) => (
+                  {weekPlan.meals.map((meal, index) => (
                     <button
-                      key={meal.day}
-                      onClick={() => setSelectedDay(meal.day)}
+                      key={index}
+                      onClick={() => setSelectedDayIndex(index)}
                       className={cn(
                         'w-full p-3 rounded-xl text-left transition-all',
-                        selectedDay === meal.day
+                        selectedDayIndex === index
                           ? 'bg-primary text-primary-foreground'
                           : 'bg-muted/50 hover:bg-muted'
                       )}
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-medium">{meal.weekday}</span>
-                          <span className="ml-2 text-sm opacity-80">{meal.day}日</span>
+                          <span className="font-medium">{meal.date}</span>
+                          <span className="ml-2 text-sm opacity-80">{meal.weekday}</span>
                         </div>
                         <ChevronRight className="w-4 h-4 opacity-50" />
                       </div>
                       <div className={cn(
                         'text-xs mt-1',
-                        selectedDay === meal.day ? 'text-primary-foreground/70' : 'text-muted-foreground'
+                        selectedDayIndex === index ? 'text-primary-foreground/70' : 'text-muted-foreground'
                       )}>
                         {meal.lunch.main.name} · {meal.dinner.main.name}
                       </div>
@@ -169,7 +174,7 @@ export default function WeeklyPlanPage() {
               {selectedMeal && (
                 <div className="space-y-6 animate-fade-in">
                   <div className="text-center">
-                    <h2 className="text-2xl font-bold">{selectedMeal.weekday} · {selectedMeal.day}日</h2>
+                    <h2 className="text-2xl font-bold">{selectedMeal.date} · {selectedMeal.weekday}</h2>
                   </div>
                   
                   {/* Lunch */}
