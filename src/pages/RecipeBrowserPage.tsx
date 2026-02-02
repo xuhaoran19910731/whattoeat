@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, Filter, X, Clock, Flame, ChefHat, Sparkles, Carrot, Lightbulb, ShoppingCart, Tag } from 'lucide-react'
+import { Search, Filter, X, Clock, Flame, ChefHat, Sparkles, Carrot, Lightbulb, ShoppingCart } from 'lucide-react'
 import { getAllRecipes, getAllTags, getAllFlavors, searchRecipes, getAllIngredients } from '../data'
-import { supermarketItems, supermarketInfo, type SupermarketItem } from '../data/german-supermarket'
+import { supermarketItems } from '../data/german-supermarket'
 import { cn } from '../lib/utils'
 
 const typeFilters = [
@@ -80,8 +80,6 @@ export default function RecipeBrowserPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState('all')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
-  const [selectedSupermarket, setSelectedSupermarket] = useState<'all' | 'penny' | 'kaufland' | 'rewe'>('all')
-  const [selectedSupermarketIngredients, setSelectedSupermarketIngredients] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
   const [showCreativeRecipe, setShowCreativeRecipe] = useState(false)
   
@@ -90,26 +88,38 @@ export default function RecipeBrowserPage() {
   const allFlavors = getAllFlavors()
   const allIngredients = getAllIngredients()
   
-  // 德国超市食材按分类整理
-  const supermarketIngredientsByCategory = useMemo(() => {
-    const filtered = selectedSupermarket === 'all' 
-      ? supermarketItems 
-      : supermarketItems.filter(item => item.supermarkets.includes(selectedSupermarket))
-    
-    const categories: Record<string, SupermarketItem[]> = {
-      '蔬菜': filtered.filter(i => i.category === 'vegetable'),
-      '肉类': filtered.filter(i => i.category === 'meat'),
-      '海鲜': filtered.filter(i => i.category === 'seafood'),
-      '水果': filtered.filter(i => i.category === 'fruit'),
-      '乳蛋': filtered.filter(i => i.category === 'dairy'),
-      '其他': filtered.filter(i => i.category === 'other'),
-    }
-    return categories
-  }, [selectedSupermarket])
+  // 获取食材的超市标注
+  const getIngredientSupermarkets = (ingredientName: string): string[] => {
+    const matched = supermarketItems.find(item => 
+      ingredientName.includes(item.name) || 
+      item.name.includes(ingredientName) ||
+      ingredientName === item.name
+    )
+    return matched ? matched.supermarkets : []
+  }
   
-  // 食材分类
-  const ingredientCategories = useMemo(() => {
-    const categories: Record<string, string[]> = {
+  // 合并原有食材和超市食材，生成带超市标注的食材列表
+  const mergedIngredientCategories = useMemo(() => {
+    // 用Map去重，key是食材名，value包含食材名和对应超市
+    const ingredientMap = new Map<string, { name: string; supermarkets: string[] }>()
+    
+    // 添加原有食材
+    allIngredients.forEach(ing => {
+      if (!['盐', '糖', '酱油', '醋', '料酒', '葱', '姜', '蒜', '油', '粉', '淀粉', '米', '面', '水', '酒'].some(s => ing.includes(s))) {
+        const supermarkets = getIngredientSupermarkets(ing)
+        ingredientMap.set(ing, { name: ing, supermarkets })
+      }
+    })
+    
+    // 添加超市食材（如果原有食材中没有）
+    supermarketItems.forEach(item => {
+      if (!ingredientMap.has(item.name)) {
+        ingredientMap.set(item.name, { name: item.name, supermarkets: item.supermarkets })
+      }
+    })
+    
+    // 分类
+    const categories: Record<string, { name: string; supermarkets: string[] }[]> = {
       '肉类': [],
       '蔬菜': [],
       '海鲜': [],
@@ -117,18 +127,28 @@ export default function RecipeBrowserPage() {
       '其他': []
     }
     
-    allIngredients.forEach(ing => {
-      if (ing.includes('肉') || ing.includes('鸡') || ing.includes('鸭') || ing.includes('羊') || ing.includes('牛') || ing.includes('排骨')) {
-        categories['肉类'].push(ing)
-      } else if (ing.includes('鱼') || ing.includes('虾') || ing.includes('蟹') || ing.includes('贝')) {
-        categories['海鲜'].push(ing)
-      } else if (ing.includes('豆腐') || ing.includes('豆') && !ing.includes('豆芽')) {
-        categories['豆制品'].push(ing)
-      } else if (['白菜', '萝卜', '土豆', '番茄', '青椒', '西兰花', '山药', '木耳', '蘑菇', '黄瓜', '茄子', '洋葱', '胡萝卜', '芹菜', '菠菜', '生菜', '豆芽'].some(v => ing.includes(v))) {
-        categories['蔬菜'].push(ing)
-      } else if (!['盐', '糖', '酱油', '醋', '料酒', '葱', '姜', '蒜', '油', '粉', '淀粉', '米', '面'].some(s => ing.includes(s))) {
-        categories['其他'].push(ing)
+    ingredientMap.forEach((item) => {
+      const ing = item.name
+      if (ing.includes('肉') || ing.includes('鸡') || ing.includes('鸭') || ing.includes('羊') || ing.includes('牛') || ing.includes('排骨') || ing.includes('火鸡') || ing.includes('培根') || ing.includes('香肠')) {
+        categories['肉类'].push(item)
+      } else if (ing.includes('鱼') || ing.includes('虾') || ing.includes('蟹') || ing.includes('贝') || ing.includes('三文鱼')) {
+        categories['海鲜'].push(item)
+      } else if (ing.includes('豆腐') || (ing.includes('豆') && !ing.includes('豆芽') && !ing.includes('四季豆'))) {
+        categories['豆制品'].push(item)
+      } else if (['白菜', '萝卜', '土豆', '番茄', '青椒', '西兰花', '山药', '木耳', '蘑菇', '黄瓜', '茄子', '洋葱', '胡萝卜', '芹菜', '菠菜', '生菜', '豆芽', '抱子甘蓝', '迷你黄瓜', '大葱', '四季豆', '生姜'].some(v => ing.includes(v))) {
+        categories['蔬菜'].push(item)
+      } else {
+        categories['其他'].push(item)
       }
+    })
+    
+    // 按是否有超市标注排序（有超市标注的排前面）
+    Object.keys(categories).forEach(key => {
+      categories[key].sort((a, b) => {
+        if (a.supermarkets.length > 0 && b.supermarkets.length === 0) return -1
+        if (a.supermarkets.length === 0 && b.supermarkets.length > 0) return 1
+        return 0
+      })
     })
     
     return categories
@@ -161,17 +181,8 @@ export default function RecipeBrowserPage() {
       )
     }
     
-    // 超市食材筛选
-    if (selectedSupermarketIngredients.length > 0) {
-      recipes = recipes.filter(r =>
-        selectedSupermarketIngredients.some(smIng =>
-          r.ingredients.some(i => i.name.includes(smIng))
-        )
-      )
-    }
-    
     return recipes
-  }, [searchQuery, selectedType, selectedFlavor, selectedDifficulty, selectedTags, selectedIngredients, selectedSupermarketIngredients, allRecipes])
+  }, [searchQuery, selectedType, selectedFlavor, selectedDifficulty, selectedTags, selectedIngredients, allRecipes])
   
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -189,14 +200,6 @@ export default function RecipeBrowserPage() {
     )
   }
   
-  const toggleSupermarketIngredient = (ingredient: string) => {
-    setSelectedSupermarketIngredients(prev =>
-      prev.includes(ingredient)
-        ? prev.filter(i => i !== ingredient)
-        : [...prev, ingredient]
-    )
-  }
-  
   const clearFilters = () => {
     setSearchQuery('')
     setSelectedType('all')
@@ -204,12 +207,10 @@ export default function RecipeBrowserPage() {
     setSelectedDifficulty('all')
     setSelectedTags([])
     setSelectedIngredients([])
-    setSelectedSupermarket('all')
-    setSelectedSupermarketIngredients([])
     setShowCreativeRecipe(false)
   }
   
-  const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedFlavor !== 'all' || selectedDifficulty !== 'all' || selectedTags.length > 0 || selectedIngredients.length > 0 || selectedSupermarketIngredients.length > 0
+  const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedFlavor !== 'all' || selectedDifficulty !== 'all' || selectedTags.length > 0 || selectedIngredients.length > 0
 
   const flavorLabels: Record<string, string> = {
     salty: '咸鲜', spicy: '麻辣', sour: '酸爽', sweet: '酸甜', light: '清淡', rich: '浓郁'
@@ -293,99 +294,41 @@ export default function RecipeBrowserPage() {
                 </div>
               </div>
               
-              {/* Ingredient Filter - NEW */}
+              {/* Ingredient Filter - 合并食材库与超市食材 */}
               <div className="mb-4">
                 <h4 className="font-medium mb-2 text-sm text-muted-foreground flex items-center gap-2">
                   <Carrot className="w-4 h-4" />
                   食材
+                  <span className="text-xs text-red-500 flex items-center gap-1">
+                    <ShoppingCart className="w-3 h-3" />
+                    标注为德国超市本周在售
+                  </span>
                 </h4>
                 <div className="space-y-3">
-                  {Object.entries(ingredientCategories).map(([category, ingredients]) => (
+                  {Object.entries(mergedIngredientCategories).map(([category, ingredients]) => (
                     ingredients.length > 0 && (
                       <div key={category}>
                         <div className="text-xs text-muted-foreground mb-1.5">{category}</div>
                         <div className="flex flex-wrap gap-2">
-                          {ingredients.slice(0, 8).map((ing) => (
-                            <button
-                              key={ing}
-                              onClick={() => toggleIngredient(ing)}
-                              className={cn(
-                                'px-3 py-1.5 rounded-full text-sm font-medium transition-all',
-                                selectedIngredients.includes(ing)
-                                  ? 'bg-primary text-primary-foreground'
-                                  : 'bg-muted hover:bg-muted/80'
-                              )}
-                            >
-                              {ing}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )
-                  ))}
-                </div>
-              </div>
-              
-              {/* German Supermarket Ingredients */}
-              <div className="mb-4 p-4 rounded-xl bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 border border-red-100 dark:border-red-900/30">
-                <h4 className="font-medium mb-3 text-sm flex items-center gap-2">
-                  <ShoppingCart className="w-4 h-4 text-red-500" />
-                  <span>德国超市本周上市</span>
-                  <span className="px-2 py-0.5 rounded-full text-xs bg-red-500 text-white">促销</span>
-                </h4>
-                
-                {/* Supermarket Selector */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <button
-                    onClick={() => setSelectedSupermarket('all')}
-                    className={cn(
-                      'px-3 py-1.5 rounded-full text-xs font-medium transition-all border',
-                      selectedSupermarket === 'all'
-                        ? 'bg-gray-800 text-white border-gray-800'
-                        : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
-                    )}
-                  >
-                    全部超市
-                  </button>
-                  {(['penny', 'kaufland', 'rewe'] as const).map((market) => (
-                    <button
-                      key={market}
-                      onClick={() => setSelectedSupermarket(market)}
-                      className={cn(
-                        'px-3 py-1.5 rounded-full text-xs font-medium transition-all border',
-                        selectedSupermarket === market
-                          ? `${supermarketInfo[market].bgColor} text-white border-transparent`
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
-                      )}
-                    >
-                      {supermarketInfo[market].name}
-                    </button>
-                  ))}
-                </div>
-                
-                {/* Supermarket Ingredients by Category */}
-                <div className="space-y-3">
-                  {Object.entries(supermarketIngredientsByCategory).map(([category, items]) => (
-                    items.length > 0 && (
-                      <div key={category}>
-                        <div className="text-xs text-muted-foreground mb-1.5">{category}</div>
-                        <div className="flex flex-wrap gap-2">
-                          {items.map((item) => (
+                          {ingredients.slice(0, 12).map((item) => (
                             <button
                               key={item.name}
-                              onClick={() => toggleSupermarketIngredient(item.name)}
+                              onClick={() => toggleIngredient(item.name)}
                               className={cn(
-                                'px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5',
-                                selectedSupermarketIngredients.includes(item.name)
-                                  ? 'bg-red-500 text-white'
-                                  : 'bg-white text-gray-700 border border-gray-200 hover:border-red-300 hover:bg-red-50'
+                                'relative px-3 py-1.5 rounded-full text-sm font-medium transition-all',
+                                selectedIngredients.includes(item.name)
+                                  ? 'bg-primary text-primary-foreground'
+                                  : item.supermarkets.length > 0
+                                    ? 'bg-red-50 text-gray-700 border border-red-200 hover:border-red-400 hover:bg-red-100'
+                                    : 'bg-muted hover:bg-muted/80'
                               )}
                             >
                               {item.name}
-                              {item.onSale && <Tag className="w-3 h-3" />}
-                              <span className="opacity-60 text-[10px]">
-                                {item.supermarkets.map(s => supermarketInfo[s].name[0]).join('·')}
-                              </span>
+                              {item.supermarkets.length > 0 && (
+                                <span className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded text-[9px] font-bold bg-red-500 text-white leading-none">
+                                  {item.supermarkets.map(s => s === 'penny' ? 'P' : s === 'kaufland' ? 'K' : 'R').join(',')}
+                                </span>
+                              )}
                             </button>
                           ))}
                         </div>

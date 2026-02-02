@@ -1,0 +1,40 @@
+name: Update German Supermarket Data
+
+on:
+  schedule:
+    # 每天北京时间早上8点运行 (UTC 0:00)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm install node-fetch cheerio
+        
+      - name: Run update script
+        run: node scripts/update-supermarket-data.js
+        
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code src/data/german-supermarket.ts || echo "changes=true" >> $GITHUB_OUTPUT
+          
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/data/german-supermarket.ts
+          git commit -m "chore: 自动更新德国超市食材数据 $(date +'%Y-%m-%d')"
+          git push
