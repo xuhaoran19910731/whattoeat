@@ -1,11 +1,12 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { ChefHat, Calendar, UtensilsCrossed, Calculator, Menu, X } from 'lucide-react'
+import { ChefHat, Calendar, UtensilsCrossed, Calculator, Menu, X, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '../lib/utils'
 
 const navItems = [
   { path: '/', label: '首页', icon: ChefHat },
   { path: '/weekly', label: '每周计划', icon: Calendar },
+  { path: '/surprise', label: '每日惊喜', icon: Sparkles },
   { path: '/browse', label: '食谱库', icon: UtensilsCrossed },
   { path: '/calculator', label: '营养计算', icon: Calculator },
 ]
