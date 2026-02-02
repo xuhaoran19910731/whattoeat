@@ -74,8 +74,18 @@ export default function RecipeDetailPage() {
         {/* Recipe Header */}
         <div className="recipe-card overflow-hidden mb-8">
           {/* Image */}
-          <div className="relative h-64 md:h-72 bg-gradient-to-br from-primary/20 to-primary/5">
-            <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative h-64 md:h-72 bg-gradient-to-br from-primary/20 to-primary/5 overflow-hidden">
+            <img 
+              src={`/images/recipes/${recipe.id}.png`}
+              alt={recipe.name}
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.style.display = 'none'
+                target.nextElementSibling?.classList.remove('hidden')
+              }}
+            />
+            <div className="hidden absolute inset-0 flex items-center justify-center">
               <ChefHat className="w-24 h-24 text-primary/30" />
             </div>
             

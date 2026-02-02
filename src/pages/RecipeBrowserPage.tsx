@@ -462,9 +462,19 @@ export default function RecipeBrowserPage() {
                 className="recipe-card overflow-hidden group animate-scale-in"
                 style={{ animationDelay: `${index * 30}ms` }}
               >
-                {/* Image Placeholder */}
-                <div className="relative h-40 bg-gradient-to-br from-primary/20 to-primary/5">
-                  <div className="absolute inset-0 flex items-center justify-center">
+                {/* Recipe Image */}
+                <div className="relative h-40 bg-gradient-to-br from-primary/20 to-primary/5 overflow-hidden">
+                  <img 
+                    src={`/images/recipes/${recipe.id}.png`}
+                    alt={recipe.name}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.style.display = 'none'
+                      target.nextElementSibling?.classList.remove('hidden')
+                    }}
+                  />
+                  <div className="hidden absolute inset-0 flex items-center justify-center">
                     <ChefHat className="w-12 h-12 text-primary/30" />
                   </div>
                   
