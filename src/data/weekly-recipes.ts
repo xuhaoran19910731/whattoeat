@@ -58,7 +58,7 @@ const week1Recipes: Recipe[] = [
       { name: '洋葱', amount: '半个', category: 'vegetable', storageDays: 14 },
       { name: '姜', amount: '1块', category: 'seasoning', storageDays: 14 },
     ],
-    steps: ['牛腩切块焯水', '番茄土豆切块', '爆香姜片八角', '加牛腩翻炒', '加番茄炒出汁', '炖1.5小时', '加土豆炖30分钟'],
+    steps: ['牛腩切3cm块冷水下锅焯水5分钟捞出', '番茄划十字开水烫去皮切块，土豆切滚刀块', '热锅冷油爆香姜片和八角30秒', '加入牛腩翻炒2分钟上色', '加番茄炒出汁约3分钟', '加开水没过食材，大火烧开转小火炖1.5小时', '加土豆继续炖30分钟至软烂，加盐调味'],
     nutrition: { calories: 450, protein: 35, carbs: 25, fat: 24 }, cookTime: 120, difficulty: 'medium', tags: ['炖菜', '高蛋白']
   },
   {
@@ -68,7 +68,7 @@ const week1Recipes: Recipe[] = [
       { name: '黑木耳', amount: '50g(干)', category: 'vegetable', storageDays: 365 },
       { name: '胡萝卜', amount: '半根', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['山药去皮切片', '木耳泡发', '胡萝卜切片', '爆香蒜末', '翻炒出锅'],
+    steps: ['木耳提前泡发2小时洗净撕小朵', '山药去皮切3mm薄片泡醋水防氧化', '胡萝卜切菱形片', '热锅加油2勺爆香蒜末10秒', '先下胡萝卜翻炒1分钟', '加山药木耳大火翻炒2分钟', '加盐1/2茶匙、鸡精少许调味出锅'],
     nutrition: { calories: 120, protein: 4, carbs: 25, fat: 2 }, cookTime: 15, difficulty: 'easy', tags: ['清淡', '养生']
   },
   {
@@ -77,7 +77,7 @@ const week1Recipes: Recipe[] = [
       { name: '羊肉', amount: '500g', category: 'meat', storageDays: 3 },
       { name: '白萝卜', amount: '1根', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['羊肉焯水', '萝卜切块', '炒糖色', '炖1小时', '加萝卜炖30分钟'],
+    steps: ['羊肉切4cm块冷水下锅加姜片料酒焯水5分钟去膻', '白萝卜去皮切滚刀块', '热锅加油炒糖色至枣红色约1分钟', '加羊肉翻炒上色3分钟', '加生抽2勺老抽1勺、八角桂皮香叶', '加开水没过羊肉，大火烧开转小火炖1小时', '加萝卜继续炖30分钟至软烂，大火收汁'],
     nutrition: { calories: 420, protein: 38, carbs: 12, fat: 26 }, cookTime: 100, difficulty: 'medium', tags: ['温补', '冬季']
   },
   {
@@ -86,7 +86,7 @@ const week1Recipes: Recipe[] = [
       { name: '西兰花', amount: '1颗', category: 'vegetable', storageDays: 7 },
       { name: '蒜', amount: '5瓣', category: 'seasoning', storageDays: 30 },
     ],
-    steps: ['西兰花切小朵焯水', '爆香蒜末', '加蚝油翻炒'],
+    steps: ['西兰花切小朵盐水浸泡10分钟洗净', '烧开水加少许油盐焯西兰花2分钟捞出沥干', '蒜切末备用', '热锅加油2勺小火爆香蒜末20秒', '加入西兰花大火翻炒1分钟', '加蚝油1勺、盐少许调味即可出锅'],
     nutrition: { calories: 80, protein: 6, carbs: 8, fat: 3 }, cookTime: 12, difficulty: 'easy', tags: ['清淡', '快手']
   },
   {
@@ -95,7 +95,7 @@ const week1Recipes: Recipe[] = [
       { name: '草鱼', amount: '1条', category: 'seafood', storageDays: 2 },
       { name: '酸菜', amount: '200g', category: 'vegetable', storageDays: 30 },
     ],
-    steps: ['鱼片腌制', '酸菜炒香', '煮汤下鱼片', '淋热油'],
+    steps: ['草鱼片成薄片加蛋清淀粉盐腌制15分钟', '酸菜切丝挤干水分', '热锅加油3勺爆香姜蒜、干辣椒、花椒30秒', '加酸菜翻炒出香味2分钟', '加开水1升煮开后小火煮10分钟出酸味', '开大火下鱼片快速拨散约30秒变白即熟', '盛入碗中，另起锅烧热油淋在表面'],
     nutrition: { calories: 350, protein: 40, carbs: 8, fat: 18 }, cookTime: 40, difficulty: 'medium', tags: ['川菜', '开胃']
   },
   {
@@ -104,7 +104,7 @@ const week1Recipes: Recipe[] = [
       { name: '北豆腐', amount: '1块', category: 'tofu', storageDays: 5 },
       { name: '五花肉', amount: '100g', category: 'meat', storageDays: 3 },
     ],
-    steps: ['豆腐煎金黄', '爆香肉片', '加豆瓣酱', '焖煮入味'],
+    steps: ['北豆腐切1.5cm厚片，五花肉切薄片', '热锅加油3勺中火煎豆腐至两面金黄约5分钟盛出', '锅留底油爆香葱姜蒜和肉片2分钟', '加豆瓣酱1勺炒出红油30秒', '加入豆腐、生抽1勺、水小半碗焖煮3分钟', '大火收汁撒葱花出锅'],
     nutrition: { calories: 280, protein: 18, carbs: 8, fat: 20 }, cookTime: 25, difficulty: 'easy', tags: ['家常', '下饭']
   },
   {
@@ -112,7 +112,7 @@ const week1Recipes: Recipe[] = [
     ingredients: [
       { name: '肋排', amount: '500g', category: 'meat', storageDays: 3 },
     ],
-    steps: ['排骨焯水', '调糖醋汁', '炒上色', '焖煮收汁'],
+    steps: ['排骨剁3cm段冷水下锅焯水5分钟去血沫捞出', '调糖醋汁：醋3勺、糖2勺、生抽2勺、番茄酱1勺混合', '热锅加油炒糖色至枣红起泡', '快速下排骨翻炒均匀上色1分钟', '加开水没过排骨，大火烧开转中火焖煮30分钟', '加入糖醋汁大火收汁至浓稠约5分钟', '撒白芝麻出锅装盘'],
     nutrition: { calories: 480, protein: 28, carbs: 22, fat: 32 }, cookTime: 50, difficulty: 'medium', tags: ['经典', '酸甜']
   },
   {
@@ -121,7 +121,7 @@ const week1Recipes: Recipe[] = [
       { name: '油菜', amount: '300g', category: 'vegetable', storageDays: 5 },
       { name: '香菇', amount: '6朵', category: 'vegetable', storageDays: 7 },
     ],
-    steps: ['油菜焯水摆盘', '香菇炒香', '淋汁上桌'],
+    steps: ['油菜洗净切去根部，香菇洗净切片', '烧开水加少许油盐焯油菜1分钟捞出摆盘', '热锅加油2勺爆香蒜末葱白15秒', '加香菇翻炒2分钟至软', '加蚝油1勺、水2勺、盐少许调味', '勾薄芡淋在油菜上即可'],
     nutrition: { calories: 70, protein: 4, carbs: 8, fat: 3 }, cookTime: 15, difficulty: 'easy', tags: ['清淡', '素菜']
   },
 ]
@@ -161,7 +161,7 @@ const week2Recipes: Recipe[] = [
       { name: '嫩豆腐', amount: '2块', category: 'tofu', storageDays: 5 },
       { name: '猪肉末', amount: '150g', category: 'meat', storageDays: 2 },
     ],
-    steps: ['豆腐切块焯水', '炒香肉末', '加豆瓣酱', '加豆腐焖煮', '勾芡撒花椒'],
+    steps: ['嫩豆腐切2cm方块开水焯1分钟捞出沥干', '热锅加油2勺炒散肉末至变色约2分钟', '加豆瓣酱1勺炒出红油30秒', '加水1碗烧开放入豆腐小火煮3分钟入味', '加生抽1/2勺调味', '水淀粉勾芡撒花椒粉和葱花出锅'],
     nutrition: { calories: 320, protein: 22, carbs: 12, fat: 22 }, cookTime: 20, difficulty: 'easy', tags: ['川菜', '下饭']
   },
   {
@@ -170,7 +170,7 @@ const week2Recipes: Recipe[] = [
       { name: '菠菜', amount: '300g', category: 'vegetable', storageDays: 3 },
       { name: '鸡蛋', amount: '3个', category: 'egg', storageDays: 14 },
     ],
-    steps: ['菠菜焯水切段', '鸡蛋炒散', '加入菠菜翻炒'],
+    steps: ['菠菜洗净开水焯30秒捞出切段沥干', '鸡蛋打散加少许盐搅匀', '热锅加油3勺炒蛋至凝固盛出', '锅留底油加蒜末爆香10秒', '下菠菜翻炒1分钟', '加入炒蛋翻匀加盐调味出锅'],
     nutrition: { calories: 150, protein: 12, carbs: 5, fat: 10 }, cookTime: 10, difficulty: 'easy', tags: ['快手', '营养']
   },
   {
@@ -180,7 +180,7 @@ const week2Recipes: Recipe[] = [
       { name: '香菇', amount: '8朵', category: 'vegetable', storageDays: 7 },
       { name: '青椒', amount: '2个', category: 'vegetable', storageDays: 7 },
     ],
-    steps: ['鸡肉剁块', '爆香姜蒜', '加鸡肉炒变色', '加调料焖煮', '加香菇青椒'],
+    steps: ['三黄鸡剁3cm块洗净沥干，香菇泡发切半，青椒切块', '热锅加油3勺爆香姜蒜和干辣椒20秒', '下鸡块大火翻炒至变色约3分钟', '加生抽2勺老抽1勺料酒1勺翻匀', '加水没过鸡肉，大火烧开转中火焖煮20分钟', '加香菇继续焖10分钟', '加青椒翻炒2分钟大火收汁出锅'],
     nutrition: { calories: 380, protein: 35, carbs: 10, fat: 22 }, cookTime: 45, difficulty: 'medium', tags: ['家常', '鲜香']
   },
   {
@@ -189,7 +189,7 @@ const week2Recipes: Recipe[] = [
       { name: '海带丝', amount: '200g', category: 'vegetable', storageDays: 7 },
       { name: '蒜', amount: '5瓣', category: 'seasoning', storageDays: 30 },
     ],
-    steps: ['海带丝焯水', '加蒜末调料拌匀'],
+    steps: ['海带丝浸泡30分钟洗净', '烧开水焯海带丝3分钟捞出过凉水沥干', '蒜切末加生抽2勺醋2勺糖1/2勺香油1勺调成料汁', '海带丝加料汁拌匀', '撒白芝麻和香菜即可'],
     nutrition: { calories: 45, protein: 2, carbs: 8, fat: 1 }, cookTime: 10, difficulty: 'easy', tags: ['凉菜', '开胃']
   },
   {
@@ -198,7 +198,7 @@ const week2Recipes: Recipe[] = [
       { name: '鲈鱼', amount: '1条', category: 'seafood', storageDays: 1 },
       { name: '葱姜', amount: '适量', category: 'seasoning', storageDays: 7 },
     ],
-    steps: ['鲈鱼处理干净', '铺葱姜', '蒸8分钟', '淋蒸鱼豉油', '泼热油'],
+    steps: ['鲈鱼去鳞去内脏洗净两面划刀', '鱼身抹少许盐和料酒腌制10分钟', '鱼身铺姜片和葱段', '水开后大火蒸8分钟关火虚蒸2分钟', '倒掉蒸出的汤汁铺新鲜葱丝姜丝', '淋蒸鱼豉油2勺', '热油3勺烧至冒烟泼在葱姜上'],
     nutrition: { calories: 180, protein: 32, carbs: 2, fat: 5 }, cookTime: 20, difficulty: 'easy', tags: ['清淡', '高蛋白']
   },
   {
@@ -207,7 +207,7 @@ const week2Recipes: Recipe[] = [
       { name: '番茄', amount: '2个', category: 'vegetable', storageDays: 7 },
       { name: '鸡蛋', amount: '3个', category: 'egg', storageDays: 14 },
     ],
-    steps: ['番茄切块', '鸡蛋炒散盛出', '炒番茄出汁', '加回鸡蛋'],
+    steps: ['番茄划十字开水烫去皮切块', '鸡蛋打散加少许盐搅匀', '热锅加油3勺大火炒蛋至刚凝固盛出', '锅加油1勺下番茄翻炒出汁约2分钟', '加糖1/2勺盐少许调味', '倒入炒蛋翻匀即可出锅'],
     nutrition: { calories: 200, protein: 14, carbs: 12, fat: 12 }, cookTime: 15, difficulty: 'easy', tags: ['经典', '下饭']
   },
   {
@@ -217,7 +217,7 @@ const week2Recipes: Recipe[] = [
       { name: '花生米', amount: '50g', category: 'other', storageDays: 90 },
       { name: '干辣椒', amount: '10个', category: 'seasoning', storageDays: 365 },
     ],
-    steps: ['鸡肉切丁腌制', '炸香花生', '爆香辣椒花椒', '炒鸡丁', '调味加花生'],
+    steps: ['鸡胸切2cm丁加蛋清淀粉盐腌制15分钟', '调碗汁：醋2勺糖1勺生抽1勺淀粉1勺水2勺', '花生米小火炸至金黄捞出备用', '热锅加油3勺下鸡丁滑散至变白盛出', '锅留底油小火爆香干辣椒花椒20秒', '下鸡丁翻炒30秒', '倒入碗汁翻炒至浓稠加花生米出锅'],
     nutrition: { calories: 350, protein: 35, carbs: 15, fat: 18 }, cookTime: 25, difficulty: 'medium', tags: ['川菜', '经典']
   },
   {
@@ -226,7 +226,7 @@ const week2Recipes: Recipe[] = [
       { name: '四季豆', amount: '400g', category: 'vegetable', storageDays: 5 },
       { name: '肉末', amount: '50g', category: 'meat', storageDays: 2 },
     ],
-    steps: ['四季豆切段', '油炸至皱皮', '爆香肉末', '加四季豆翻炒'],
+    steps: ['四季豆去筋切5cm段洗净沥干', '热锅多油中火炸四季豆至皱皮约5分钟捞出', '锅留底油爆香蒜末姜末和肉末2分钟', '下四季豆加盐1/2茶匙生抽1勺翻炒1分钟', '加少许水焖1分钟大火收干出锅'],
     nutrition: { calories: 120, protein: 8, carbs: 12, fat: 5 }, cookTime: 20, difficulty: 'easy', tags: ['下饭', '家常']
   },
   {
@@ -235,7 +235,7 @@ const week2Recipes: Recipe[] = [
       { name: '猪里脊', amount: '250g', category: 'meat', storageDays: 3 },
       { name: '青椒', amount: '3个', category: 'vegetable', storageDays: 7 },
     ],
-    steps: ['肉丝腌制', '青椒切丝', '滑炒肉丝', '加青椒翻炒'],
+    steps: ['猪里脊切丝加蛋清淀粉盐腌制10分钟', '青椒去籽切丝', '热锅加油3勺下肉丝滑散至变白盛出', '锅加油1勺下青椒大火翻炒1分钟至断生', '下肉丝加生抽1勺盐少许翻炒30秒出锅'],
     nutrition: { calories: 280, protein: 25, carbs: 8, fat: 17 }, cookTime: 15, difficulty: 'easy', tags: ['快手', '下饭']
   },
   {
@@ -244,7 +244,7 @@ const week2Recipes: Recipe[] = [
       { name: '紫菜', amount: '10g', category: 'vegetable', storageDays: 365 },
       { name: '虾皮', amount: '10g', category: 'seafood', storageDays: 90 },
     ],
-    steps: ['烧开水', '下紫菜虾皮', '调味即可'],
+    steps: ['紫菜撕小块虾皮洗净', '烧开水2碗', '下紫菜和虾皮煮1分钟', '加盐少许香油几滴调味', '撒葱花即可出锅'],
     nutrition: { calories: 30, protein: 4, carbs: 3, fat: 1 }, cookTime: 5, difficulty: 'easy', tags: ['汤品', '快手']
   },
   {
@@ -253,7 +253,7 @@ const week2Recipes: Recipe[] = [
       { name: '五花肉', amount: '400g', category: 'meat', storageDays: 3 },
       { name: '蒜苗', amount: '200g', category: 'vegetable', storageDays: 5 },
     ],
-    steps: ['五花肉煮熟切片', '爆香豆瓣酱', '加肉片煸炒', '加蒜苗翻炒'],
+    steps: ['五花肉整块冷水下锅加姜片葱段煮20分钟捞出晾凉', '五花肉切3mm薄片，蒜苗切斜段', '热锅不加油下肉片中火煸至出油卷曲约3分钟', '加豆瓣酱1勺炒出红油30秒', '加豆豉少许甜面酱1/2勺翻炒上色', '下蒜苗大火翻炒1分钟至断生出锅'],
     nutrition: { calories: 450, protein: 22, carbs: 8, fat: 38 }, cookTime: 30, difficulty: 'medium', tags: ['川菜', '下饭']
   },
   {
@@ -262,7 +262,7 @@ const week2Recipes: Recipe[] = [
       { name: '冬瓜', amount: '500g', category: 'vegetable', storageDays: 14 },
       { name: '虾皮', amount: '20g', category: 'seafood', storageDays: 90 },
     ],
-    steps: ['冬瓜切块', '爆香虾皮', '加冬瓜煮软'],
+    steps: ['冬瓜去皮去籽切薄片，虾皮洗净沥干', '热锅加油1勺爆香虾皮30秒', '下冬瓜翻炒1分钟', '加水小半碗盖盖焖煮8分钟至透明', '加盐少许调味撒葱花出锅'],
     nutrition: { calories: 60, protein: 5, carbs: 10, fat: 1 }, cookTime: 15, difficulty: 'easy', tags: ['清淡', '养生']
   },
   {
@@ -272,7 +272,7 @@ const week2Recipes: Recipe[] = [
       { name: '木耳', amount: '50g', category: 'vegetable', storageDays: 365 },
       { name: '胡萝卜', amount: '1根', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['肉丝腌制', '配菜切丝', '调鱼香汁', '炒肉丝', '加配菜和汁'],
+    steps: ['猪里脊切丝加蛋清淀粉盐腌制10分钟', '木耳泡发切丝，胡萝卜切丝', '调鱼香汁：醋2勺糖1.5勺生抽1勺淀粉1勺水2勺', '热锅加油3勺滑散肉丝至变白盛出', '锅加油爆香泡椒和蒜末姜末30秒', '下配菜翻炒1分钟加肉丝', '倒入鱼香汁翻炒至浓稠出锅'],
     nutrition: { calories: 320, protein: 28, carbs: 18, fat: 16 }, cookTime: 25, difficulty: 'medium', tags: ['川菜', '经典']
   },
   {
@@ -281,7 +281,7 @@ const week2Recipes: Recipe[] = [
       { name: '生菜', amount: '400g', category: 'vegetable', storageDays: 3 },
       { name: '蒜', amount: '5瓣', category: 'seasoning', storageDays: 30 },
     ],
-    steps: ['生菜洗净', '爆香蒜末', '快炒生菜'],
+    steps: ['生菜洗净掰成大片沥干', '蒜切末备用', '热锅加油2勺大火爆香蒜末10秒', '快速下生菜大火翻炒30秒至微软', '加盐1/3茶匙蚝油1/2勺翻匀出锅'],
     nutrition: { calories: 50, protein: 2, carbs: 6, fat: 2 }, cookTime: 8, difficulty: 'easy', tags: ['快手', '清淡']
   },
 ]
@@ -1081,10 +1081,10 @@ const week9Recipes: Recipe[] = [
     ingredients: [{ name: '小龙虾', amount: '1kg', category: 'seafood', storageDays: 1 }],
     steps: ['小龙虾清洗', '爆香香料', '加小龙虾焖煮'],
     nutrition: { calories: 300, protein: 35, carbs: 8, fat: 15 }, cookTime: 40, difficulty: 'medium', tags: ['夜宵', '麻辣'] },
-  { id: 'w9-corn-ribs-soup', name: '玉米排骨汤', type: 'side', season: 'winter', flavor: 'light',
-    ingredients: [{ name: '排骨', amount: '300g', category: 'meat', storageDays: 3 }, { name: '玉米', amount: '2根', category: 'vegetable', storageDays: 7 }],
-    steps: ['排骨焯水', '加玉米炖1小时'],
-    nutrition: { calories: 180, protein: 15, carbs: 15, fat: 8 }, cookTime: 70, difficulty: 'easy', tags: ['汤品', '滋补'] },
+  { id: 'w9-radish-ribs-soup', name: '萝卜排骨汤', type: 'side', season: 'winter', flavor: 'light',
+    ingredients: [{ name: '排骨', amount: '300g', category: 'meat', storageDays: 3 }, { name: '白萝卜', amount: '1根', category: 'vegetable', storageDays: 14 }],
+    steps: ['排骨冷水下锅焯水3分钟', '萝卜去皮切滚刀块', '排骨加姜片炖40分钟', '加萝卜再炖20分钟', '加盐调味即可'],
+    nutrition: { calories: 160, protein: 14, carbs: 10, fat: 8 }, cookTime: 70, difficulty: 'easy', tags: ['汤品', '滋补'] },
 ]
 
 export const week9Plan: WeeklyPlan = {
@@ -1100,7 +1100,7 @@ export const week9Plan: WeeklyPlan = {
   shoppingList: [
     { name: '牛腩', totalAmount: '500g', category: 'meat', usedIn: ['番茄炖牛肉'] },
     { name: '猪肉丝', totalAmount: '150g', category: 'meat', usedIn: ['炒面'] },
-    { name: '排骨', totalAmount: '300g', category: 'meat', usedIn: ['玉米排骨汤'] },
+    { name: '排骨', totalAmount: '300g', category: 'meat', usedIn: ['萝卜排骨汤'] },
     { name: '鸭肉', totalAmount: '半只', category: 'meat', usedIn: ['老鸭汤'] },
     { name: '鲤鱼', totalAmount: '1条', category: 'seafood', usedIn: ['糖醋鲤鱼'] },
     { name: '虾仁', totalAmount: '100g', category: 'seafood', usedIn: ['扬州炒饭'] },
@@ -1110,7 +1110,7 @@ export const week9Plan: WeeklyPlan = {
     { name: '番茄', totalAmount: '3个', category: 'vegetable', usedIn: ['番茄炖牛肉'] },
     { name: '西芹', totalAmount: '200g', category: 'vegetable', usedIn: ['西芹炒百合'] },
     { name: '油麦菜', totalAmount: '400g', category: 'vegetable', usedIn: ['蒜蓉油麦菜'] },
-    { name: '玉米', totalAmount: '2根', category: 'vegetable', usedIn: ['玉米排骨汤'] },
+    { name: '白萝卜', totalAmount: '1根', category: 'vegetable', usedIn: ['萝卜排骨汤'] },
     { name: '大米', totalAmount: '3kg', category: 'staple', usedIn: ['米饭', '炒饭'] },
     { name: '面条', totalAmount: '800g', category: 'staple', usedIn: ['炒面'] },
   ],
@@ -1122,4 +1122,25 @@ export const februaryWeeklyPlans: WeeklyPlan[] = [week6Plan, week7Plan, week8Pla
 export const allWeeklyPlans: WeeklyPlan[] = [...januaryWeeklyPlans, ...februaryWeeklyPlans]
 export const allRecipes = [...week1Recipes, ...week2Recipes, ...week3Recipes, ...week4Recipes, ...week5Recipes, ...week6Recipes, ...week7Recipes, ...week8Recipes, ...week9Recipes]
 
-export default { allWeeklyPlans, allRecipes }
+// ========== 菜品查重机制 ==========
+// 检查是否有重复的菜名（跨周重复）
+export function checkDuplicateRecipes(): { duplicates: string[], isValid: boolean } {
+  const nameCount = new Map<string, string[]>()
+  
+  allRecipes.forEach(recipe => {
+    const existing = nameCount.get(recipe.name) || []
+    existing.push(recipe.id)
+    nameCount.set(recipe.name, existing)
+  })
+  
+  const duplicates: string[] = []
+  nameCount.forEach((ids, name) => {
+    if (ids.length > 1) {
+      duplicates.push(`"${name}" 出现在: ${ids.join(', ')}`)
+    }
+  })
+  
+  return { duplicates, isValid: duplicates.length === 0 }
+}
+
+export default { allWeeklyPlans, allRecipes, checkDuplicateRecipes }
