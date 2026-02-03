@@ -328,7 +328,7 @@ const week3Recipes: Recipe[] = [
     ingredients: [
       { name: '鲤鱼', amount: '1条', category: 'seafood', storageDays: 1 },
     ],
-    steps: ['鲤鱼处理干净', '两面煎金黄', '加调料焖煮'],
+    steps: ['鲤鱼去鳞去内脏洗净，两面划3刀方便入味', '鱼身抹盐和料酒腌制10分钟', '热锅加油4勺中火煎鱼至两面金黄约5分钟', '加葱姜蒜、生抽2勺、老抽1勺、料酒1勺、糖1/2勺', '加水没过鱼身大火烧开转小火焖15分钟', '大火收汁至浓稠撒葱花出锅'],
     nutrition: { calories: 220, protein: 28, carbs: 5, fat: 10 }, cookTime: 35, difficulty: 'medium', tags: ['红烧', '鲜美']
   },
   {
@@ -337,7 +337,7 @@ const week3Recipes: Recipe[] = [
       { name: '黄瓜', amount: '2根', category: 'vegetable', storageDays: 7 },
       { name: '木耳', amount: '50g', category: 'vegetable', storageDays: 365 },
     ],
-    steps: ['黄瓜切片', '木耳泡发', '快炒出锅'],
+    steps: ['木耳提前泡发2小时洗净撕小朵', '黄瓜斜切薄片', '热锅加油2勺爆香蒜末10秒', '先下木耳翻炒1分钟', '加黄瓜大火翻炒1分钟', '加盐1/3茶匙调味出锅'],
     nutrition: { calories: 60, protein: 3, carbs: 10, fat: 1 }, cookTime: 10, difficulty: 'easy', tags: ['清爽', '快手']
   },
   {
@@ -347,7 +347,7 @@ const week3Recipes: Recipe[] = [
       { name: '咖喱块', amount: '100g', category: 'seasoning', storageDays: 180 },
       { name: '土豆', amount: '2个', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['牛肉切块焯水', '炖至软烂', '加土豆胡萝卜', '加咖喱块'],
+    steps: ['牛腱子切3cm块冷水下锅焯水5分钟捞出', '土豆胡萝卜去皮切滚刀块', '热锅加油炒香洋葱末2分钟', '加牛肉翻炒3分钟', '加开水没过食材大火烧开转小火炖1小时至牛肉软烂', '加土豆胡萝卜继续炖20分钟', '放入咖喱块搅拌至融化煮5分钟'],
     nutrition: { calories: 420, protein: 38, carbs: 25, fat: 20 }, cookTime: 90, difficulty: 'medium', tags: ['异域风味', '浓郁']
   },
   {
@@ -356,7 +356,7 @@ const week3Recipes: Recipe[] = [
       { name: '土豆', amount: '2个', category: 'vegetable', storageDays: 14 },
       { name: '干辣椒', amount: '5个', category: 'seasoning', storageDays: 365 },
     ],
-    steps: ['土豆切丝泡水', '爆香辣椒', '快炒土豆丝', '加醋调味'],
+    steps: ['土豆去皮切细丝泡水10分钟洗去淀粉沥干', '干辣椒切段、蒜切片', '热锅加油2勺小火爆香辣椒花椒蒜片15秒', '开大火倒入土豆丝快速翻炒2分钟', '加醋2勺、盐1/3茶匙翻炒均匀', '撒葱花出锅'],
     nutrition: { calories: 100, protein: 2, carbs: 20, fat: 2 }, cookTime: 12, difficulty: 'easy', tags: ['开胃', '下饭']
   },
   {
@@ -365,7 +365,7 @@ const week3Recipes: Recipe[] = [
       { name: '鸭肉', amount: '半只', category: 'meat', storageDays: 2 },
       { name: '啤酒', amount: '1罐', category: 'other', storageDays: 180 },
     ],
-    steps: ['鸭肉剁块焯水', '炒至金黄', '加啤酒焖煮'],
+    steps: ['鸭肉剁3cm块冷水下锅焯水5分钟去血沫捞出', '热锅加油2勺爆香姜片八角桂皮20秒', '加鸭肉翻炒至表面金黄约5分钟', '加生抽2勺老抽1勺糖1/2勺翻炒上色', '倒入整罐啤酒大火烧开', '转小火盖盖焖煮40分钟', '加青红椒块大火收汁5分钟出锅'],
     nutrition: { calories: 380, protein: 30, carbs: 8, fat: 26 }, cookTime: 60, difficulty: 'medium', tags: ['特色', '软烂']
   },
   {
@@ -374,7 +374,7 @@ const week3Recipes: Recipe[] = [
       { name: '包菜', amount: '半颗', category: 'vegetable', storageDays: 14 },
       { name: '干辣椒', amount: '5个', category: 'seasoning', storageDays: 365 },
     ],
-    steps: ['包菜手撕块', '爆香辣椒蒜', '大火快炒'],
+    steps: ['包菜去硬芯手撕成小块洗净沥干', '干辣椒切段，蒜切片', '热锅加油3勺大火爆香干辣椒蒜片花椒10秒', '倒入包菜大火翻炒2分钟至微软', '加醋1勺生抽1/2勺盐少许翻炒均匀出锅'],
     nutrition: { calories: 70, protein: 2, carbs: 12, fat: 2 }, cookTime: 10, difficulty: 'easy', tags: ['快手', '下饭']
   },
   {
@@ -384,7 +384,7 @@ const week3Recipes: Recipe[] = [
       { name: '蒸肉粉', amount: '100g', category: 'seasoning', storageDays: 180 },
       { name: '红薯', amount: '1个', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['排骨腌制', '裹蒸肉粉', '铺红薯蒸40分钟'],
+    steps: ['排骨剁小块加生抽1勺料酒1勺盐少许腌制20分钟', '加蒸肉粉拌匀让每块排骨裹上粉', '红薯去皮切厚片铺在蒸碗底', '把裹粉的排骨码在红薯上', '蒸锅水开后大火蒸40分钟', '出锅撒葱花和红辣椒圈'],
     nutrition: { calories: 450, protein: 28, carbs: 30, fat: 26 }, cookTime: 50, difficulty: 'easy', tags: ['蒸菜', '软糯']
   },
   {
@@ -393,7 +393,7 @@ const week3Recipes: Recipe[] = [
       { name: '番茄', amount: '2个', category: 'vegetable', storageDays: 7 },
       { name: '鸡蛋', amount: '2个', category: 'egg', storageDays: 14 },
     ],
-    steps: ['番茄切块炒软', '加水煮开', '淋蛋液'],
+    steps: ['番茄划十字开水烫去皮切小块', '鸡蛋打散备用', '热锅加油1勺炒番茄至出汁约2分钟', '加水3碗大火煮开', '加盐1/2茶匙调味', '关火用筷子搅动汤水同时淋入蛋液', '撒葱花和香油几滴出锅'],
     nutrition: { calories: 100, protein: 8, carbs: 8, fat: 5 }, cookTime: 15, difficulty: 'easy', tags: ['汤品', '开胃']
   },
   {
@@ -401,7 +401,7 @@ const week3Recipes: Recipe[] = [
     ingredients: [
       { name: '基围虾', amount: '500g', category: 'seafood', storageDays: 1 },
     ],
-    steps: ['虾处理干净', '油炸酥脆', '撒椒盐葱花'],
+    steps: ['基围虾剪须去虾线洗净沥干', '加少许盐和料酒腌5分钟', '热锅加油烧至七成热约180度', '下虾炸至壳酥脆约3分钟捞出', '锅留少许底油爆香蒜末姜末10秒', '加炸好的虾翻炒30秒', '撒椒盐粉和葱花翻匀出锅'],
     nutrition: { calories: 250, protein: 35, carbs: 5, fat: 10 }, cookTime: 20, difficulty: 'easy', tags: ['宴客', '酥脆']
   },
   {
@@ -410,7 +410,7 @@ const week3Recipes: Recipe[] = [
       { name: '内酯豆腐', amount: '1盒', category: 'tofu', storageDays: 7 },
       { name: '皮蛋', amount: '2个', category: 'egg', storageDays: 30 },
     ],
-    steps: ['豆腐切块', '皮蛋切瓣', '淋酱油香油'],
+    steps: ['内酯豆腐倒扣切块摆盘', '皮蛋剥壳切成6瓣摆在豆腐周围', '蒜切末、香菜切碎', '调汁：生抽2勺醋1勺香油1勺蒜末拌匀', '淋在豆腐皮蛋上', '撒香菜即可'],
     nutrition: { calories: 150, protein: 12, carbs: 5, fat: 10 }, cookTime: 5, difficulty: 'easy', tags: ['凉菜', '简单']
   },
   {
@@ -419,7 +419,7 @@ const week3Recipes: Recipe[] = [
       { name: '猪肉馅', amount: '500g', category: 'meat', storageDays: 2 },
       { name: '荸荠', amount: '5个', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['肉馅加荸荠调味', '搓成大丸子', '煎至金黄', '加汤焖煮'],
+    steps: ['猪肉馅加切碎荸荠、葱姜末、蛋清1个、盐1茶匙、生抽1勺顺一个方向搅打上劲', '手沾水取肉馅搓成直径5cm的大丸子约4个', '热锅加油4勺中火煎丸子至四面金黄约5分钟', '加生抽2勺老抽1勺糖1/2勺和开水没过丸子', '大火烧开转小火焖煮30分钟至软烂', '大火收汁撒葱花出锅'],
     nutrition: { calories: 480, protein: 30, carbs: 15, fat: 35 }, cookTime: 50, difficulty: 'medium', tags: ['经典', '宴客']
   },
   {
@@ -427,7 +427,7 @@ const week3Recipes: Recipe[] = [
     ingredients: [
       { name: '绿豆芽', amount: '400g', category: 'vegetable', storageDays: 2 },
     ],
-    steps: ['豆芽洗净', '大火快炒', '加醋调味'],
+    steps: ['绿豆芽掐去根须洗净沥干', '热锅加油2勺大火爆香蒜末10秒', '快速倒入豆芽大火翻炒1分钟', '加醋1勺盐1/3茶匙翻炒30秒', '撒葱花出锅不可炒太久'],
     nutrition: { calories: 40, protein: 4, carbs: 6, fat: 1 }, cookTime: 5, difficulty: 'easy', tags: ['快手', '爽脆']
   },
   {
@@ -436,7 +436,7 @@ const week3Recipes: Recipe[] = [
       { name: '鸡翅', amount: '12个', category: 'meat', storageDays: 2 },
       { name: '可乐', amount: '1罐', category: 'other', storageDays: 180 },
     ],
-    steps: ['鸡翅划刀', '煎至金黄', '加可乐焖煮收汁'],
+    steps: ['鸡翅洗净两面各划2刀方便入味', '热锅加油2勺中火煎鸡翅至两面金黄约5分钟', '加姜片生抽1勺老抽1/2勺翻炒上色', '倒入可乐没过鸡翅大火烧开', '转中小火焖煮15分钟', '开大火收汁至浓稠油亮撒芝麻出锅'],
     nutrition: { calories: 350, protein: 28, carbs: 20, fat: 18 }, cookTime: 30, difficulty: 'easy', tags: ['简单', '孩子爱吃']
   },
   {
@@ -445,7 +445,7 @@ const week3Recipes: Recipe[] = [
       { name: '空心菜', amount: '400g', category: 'vegetable', storageDays: 2 },
       { name: '蒜', amount: '5瓣', category: 'seasoning', storageDays: 30 },
     ],
-    steps: ['空心菜洗净', '爆香蒜末', '大火快炒'],
+    steps: ['空心菜掐去老梗洗净沥干切段', '蒜切末备用', '热锅加油2勺大火爆香蒜末10秒', '倒入空心菜大火翻炒1分钟至微软', '加盐1/3茶匙鸡精少许翻炒均匀出锅'],
     nutrition: { calories: 50, protein: 3, carbs: 6, fat: 2 }, cookTime: 8, difficulty: 'easy', tags: ['快手', '清爽']
   },
 ]
@@ -493,7 +493,7 @@ const week4Recipes: Recipe[] = [
       { name: '五花肉', amount: '600g', category: 'meat', storageDays: 3 },
       { name: '梅菜', amount: '200g', category: 'vegetable', storageDays: 180 },
     ],
-    steps: ['五花肉煮熟炸皮', '切片码碗', '铺梅菜蒸2小时', '倒扣上桌'],
+    steps: ['五花肉整块冷水下锅煮20分钟捞出擦干', '趁热在肉皮上抹老抽和蜂蜜', '热锅多油将肉皮朝下炸至金黄起泡约3分钟', '肉切1cm厚片皮朝下码在碗底', '梅菜洗净切碎加蒜末炒香铺在肉上', '加生抽2勺老抽1勺盐1/2茶匙', '大火蒸2小时至软烂倒扣装盘'],
     nutrition: { calories: 550, protein: 25, carbs: 10, fat: 48 }, cookTime: 150, difficulty: 'hard', tags: ['宴客', '经典']
   },
   {
@@ -502,7 +502,7 @@ const week4Recipes: Recipe[] = [
       { name: '芹菜', amount: '300g', category: 'vegetable', storageDays: 7 },
       { name: '香干', amount: '200g', category: 'tofu', storageDays: 5 },
     ],
-    steps: ['芹菜切段', '香干切条', '快炒出锅'],
+    steps: ['芹菜去叶切4cm段，香干切条', '热锅加油2勺爆香蒜末10秒', '先下香干翻炒1分钟至微黄', '加芹菜大火翻炒2分钟至断生', '加盐1/3茶匙生抽1/2勺翻匀出锅'],
     nutrition: { calories: 120, protein: 10, carbs: 8, fat: 6 }, cookTime: 10, difficulty: 'easy', tags: ['快手', '家常']
   },
   {
@@ -510,7 +510,7 @@ const week4Recipes: Recipe[] = [
     ingredients: [
       { name: '草鱼', amount: '1条', category: 'seafood', storageDays: 1 },
     ],
-    steps: ['鱼切块腌制', '裹淀粉油炸', '淋糖醋汁'],
+    steps: ['草鱼切3cm块加盐料酒腌制15分钟', '鱼块裹干淀粉', '热锅多油烧至七成热炸鱼块至金黄酥脆约4分钟捞出', '调糖醋汁：番茄酱2勺醋2勺糖2勺生抽1勺淀粉1勺水3勺', '锅留底油炒香葱姜，倒入糖醋汁煮开', '下炸好的鱼块翻匀挂汁出锅'],
     nutrition: { calories: 320, protein: 30, carbs: 25, fat: 12 }, cookTime: 30, difficulty: 'medium', tags: ['酸甜', '宴客']
   },
   {
@@ -518,7 +518,7 @@ const week4Recipes: Recipe[] = [
     ingredients: [
       { name: '杏鲍菇', amount: '300g', category: 'vegetable', storageDays: 7 },
     ],
-    steps: ['杏鲍菇切片', '两面煎金黄', '加蚝油调味'],
+    steps: ['杏鲍菇切1cm厚片两面划十字花刀', '热锅加油2勺中火煎杏鲍菇至两面金黄约3分钟', '加蚝油1勺生抽1/2勺水2勺', '煮1分钟让菇吸收酱汁', '撒葱花出锅'],
     nutrition: { calories: 80, protein: 4, carbs: 10, fat: 3 }, cookTime: 15, difficulty: 'easy', tags: ['素菜', '鲜美']
   },
   {
@@ -529,7 +529,7 @@ const week4Recipes: Recipe[] = [
       { name: '土豆', amount: '1个', category: 'vegetable', storageDays: 14 },
       { name: '午餐肉', amount: '1罐', category: 'meat', storageDays: 365 },
     ],
-    steps: ['食材分别处理', '过油炸熟', '爆香麻辣底料', '加食材翻炒'],
+    steps: ['五花肉、藕片、土豆片、午餐肉分别切片', '烧热油分批将食材炸至断生捞出', '锅留2勺油小火爆香麻辣香锅底料2勺和蒜末姜末', '加干辣椒花椒炒香20秒', '倒入所有炸好的食材大火翻炒2分钟', '撒芝麻香菜出锅'],
     nutrition: { calories: 520, protein: 28, carbs: 35, fat: 32 }, cookTime: 40, difficulty: 'medium', tags: ['麻辣', '下饭']
   },
   {
@@ -538,7 +538,7 @@ const week4Recipes: Recipe[] = [
       { name: '排骨', amount: '300g', category: 'meat', storageDays: 3 },
       { name: '玉米', amount: '2根', category: 'vegetable', storageDays: 7 },
     ],
-    steps: ['排骨焯水', '加玉米炖1小时', '调味即可'],
+    steps: ['排骨剁小块冷水下锅焯水5分钟捞出洗净', '玉米切段', '砂锅加排骨姜片和开水没过食材', '大火烧开转小火炖40分钟', '加玉米继续炖20分钟', '加盐1茶匙调味撒葱花出锅'],
     nutrition: { calories: 180, protein: 15, carbs: 15, fat: 8 }, cookTime: 70, difficulty: 'easy', tags: ['汤品', '滋补']
   },
   {
@@ -547,7 +547,7 @@ const week4Recipes: Recipe[] = [
       { name: '羊肉片', amount: '400g', category: 'meat', storageDays: 2 },
       { name: '洋葱', amount: '1个', category: 'vegetable', storageDays: 14 },
     ],
-    steps: ['羊肉腌制', '洋葱切丝', '大火爆炒', '撒孜然辣椒'],
+    steps: ['羊肉片加料酒生抽淀粉腌制10分钟', '洋葱切丝，青红椒切丝', '热锅加油3勺大火快速滑散羊肉至变色盛出', '锅加油爆香洋葱丝1分钟', '下羊肉大火翻炒30秒', '撒孜然粉2茶匙辣椒粉1茶匙盐少许翻匀出锅'],
     nutrition: { calories: 380, protein: 35, carbs: 8, fat: 24 }, cookTime: 15, difficulty: 'easy', tags: ['新疆风味', '下饭']
   },
   {

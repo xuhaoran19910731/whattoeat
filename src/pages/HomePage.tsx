@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, UtensilsCrossed, Calculator, ShoppingCart, ArrowRight, Snowflake, ChefHat, Sun, Moon } from 'lucide-react'
-import { getWeeklyPlan, categorizeShoppingList, getTodayMeal, getBeijingDate } from '../data'
+import { Calendar, UtensilsCrossed, Calculator, ShoppingCart, ArrowRight, Snowflake, ChefHat, Sun, Moon, CalendarDays } from 'lucide-react'
+import { getWeeklyPlan, categorizeShoppingList, getMealByDate, getBerlinDate } from '../data'
 import { getCurrentSeason, getSeasonName } from '../lib/utils'
 
 const features = [
@@ -28,15 +29,34 @@ const features = [
 
 export default function HomePage() {
   const currentSeason = getCurrentSeason()
-  const todayData = getTodayMeal()
-  const beijingDate = getBeijingDate()
+  const berlinDate = getBerlinDate()
+  const [selectedDate, setSelectedDate] = useState<Date>(berlinDate)
+  
+  const todayData = getMealByDate(selectedDate)
   const week1 = todayData?.weekPlan || getWeeklyPlan(1)
   const categorizedList = week1 ? categorizeShoppingList(week1.shoppingList) : {}
 
-  // 格式化北京时间日期
-  const dateStr = `${beijingDate.getMonth() + 1}月${beijingDate.getDate()}日`
+  // 格式化日期
+  const dateStr = `${selectedDate.getMonth() + 1}月${selectedDate.getDate()}日`
   const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  const weekdayStr = weekdays[beijingDate.getDay()]
+  const weekdayStr = weekdays[selectedDate.getDay()]
+  
+  // 判断是否是今天
+  const isToday = selectedDate.toDateString() === berlinDate.toDateString()
+
+  // 日期选择处理
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = new Date(e.target.value)
+    setSelectedDate(date)
+  }
+  
+  // 格式化为input[type=date]所需格式
+  const formatDateForInput = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
 
   return (
     <div className="min-h-screen">
@@ -81,10 +101,31 @@ export default function HomePage() {
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-4">
                 <Calendar className="w-5 h-5" />
-                北京时间 · {dateStr} {weekdayStr}
+                {isToday ? '今日' : dateStr} {weekdayStr}
               </div>
-              <h2 className="section-title">今日食谱</h2>
-              <p className="section-subtitle mx-auto">第{todayData.weekNumber}周 · 为您精心搭配的今日美味</p>
+              <h2 className="section-title">{isToday ? '今日食谱' : `${dateStr}食谱`}</h2>
+              <p className="section-subtitle mx-auto">第{todayData.weekNumber}周 · 为您精心搭配的美味</p>
+              
+              {/* 日期选择器 */}
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <CalendarDays className="w-4 h-4 text-muted-foreground" />
+                <input
+                  type="date"
+                  value={formatDateForInput(selectedDate)}
+                  onChange={handleDateChange}
+                  min="2026-01-01"
+                  max="2026-02-28"
+                  className="px-3 py-1.5 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                {!isToday && (
+                  <button 
+                    onClick={() => setSelectedDate(berlinDate)}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    返回今天
+                  </button>
+                )}
+              </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">

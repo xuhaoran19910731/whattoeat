@@ -159,36 +159,31 @@ export function getRecipesByIngredients(ingredientNames: string[]): Recipe[] {
   )
 }
 
-// 获取北京时间当前日期
-export function getBeijingDate(): Date {
-  const now = new Date()
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000)
-  return new Date(utc + (8 * 3600000))
+// 获取柏林时间当前日期
+export function getBerlinDate(): Date {
+  // 使用Intl.DateTimeFormat获取柏林时区的准确时间
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Berlin',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+  const parts = formatter.formatToParts(new Date())
+  const year = parseInt(parts.find(p => p.type === 'year')?.value || '2026')
+  const month = parseInt(parts.find(p => p.type === 'month')?.value || '1') - 1
+  const day = parseInt(parts.find(p => p.type === 'day')?.value || '1')
+  return new Date(year, month, day)
 }
 
-// 根据北京时间获取当前对应的周和天的食谱
-export function getTodayMeal(): { weekPlan: WeeklyPlan; todayMeal: DailyMeal; weekNumber: number; dayIndex: number } | null {
-  const beijingDate = getBeijingDate()
-  const year = beijingDate.getFullYear()
-  const month = beijingDate.getMonth() + 1
-  const day = beijingDate.getDate()
-  
-  // 2026年1月1日是周四，作为基准日期
-  const baseDate = new Date(2026, 0, 1)
-  const currentDate = new Date(year, month - 1, day)
-  
-  // 计算从2026年1月1日到今天的天数差
-  const diffTime = currentDate.getTime() - baseDate.getTime()
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-  
-  // 如果日期在范围外，返回null
-  if (diffDays < 0) return null
+// 根据指定日期获取对应的周和天的食谱
+export function getMealByDate(targetDate: Date): { weekPlan: WeeklyPlan; todayMeal: DailyMeal; weekNumber: number; dayIndex: number } | null {
+  const month = targetDate.getMonth() + 1
+  const day = targetDate.getDate()
   
   // 查找对应的周计划
   for (const weekPlan of allWeeklyPlans) {
     for (let i = 0; i < weekPlan.meals.length; i++) {
       const meal = weekPlan.meals[i]
-      // 解析日期字符串，如"1月1日"
       const dateMatch = meal.date.match(/(\d+)月(\d+)日/)
       if (dateMatch) {
         const mealMonth = parseInt(dateMatch[1])
@@ -199,8 +194,12 @@ export function getTodayMeal(): { weekPlan: WeeklyPlan; todayMeal: DailyMeal; we
       }
     }
   }
-  
   return null
+}
+
+// 根据柏林时间获取当前对应的周和天的食谱
+export function getTodayMeal(): { weekPlan: WeeklyPlan; todayMeal: DailyMeal; weekNumber: number; dayIndex: number } | null {
+  return getMealByDate(getBerlinDate())
 }
 
 // 按食材分类汇总采购清单

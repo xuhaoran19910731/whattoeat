@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Sun, Moon, ShoppingCart, Check, Copy, Printer, Clock, Flame, Store } from 'lucide-react'
-import { getWeeklyPlan, categorizeShoppingList, getRecipeSupermarketMatch, isIngredientInSupermarket, type Recipe } from '../data'
+import { ChevronLeft, ChevronRight, Sun, Moon, ShoppingCart, Check, Copy, Printer, Clock, Flame, Store, CalendarDays } from 'lucide-react'
+import { getWeeklyPlan, categorizeShoppingList, getRecipeSupermarketMatch, isIngredientInSupermarket, getBerlinDate, getMealByDate, type Recipe } from '../data'
 import { cn } from '../lib/utils'
 
 const stapleLabels = {
@@ -11,12 +11,28 @@ const stapleLabels = {
 }
 
 export default function WeeklyPlanPage() {
-  const [currentWeek, setCurrentWeek] = useState(1)
+  const berlinDate = getBerlinDate()
+  const todayData = getMealByDate(berlinDate)
+  
+  const [currentWeek, setCurrentWeek] = useState(todayData?.weekNumber || 1)
   const [activeTab, setActiveTab] = useState<'meals' | 'shopping'>('meals')
-  const [selectedDayIndex, setSelectedDayIndex] = useState(0)
+  const [selectedDayIndex, setSelectedDayIndex] = useState(todayData?.dayIndex || 0)
   const [copiedList, setCopiedList] = useState(false)
   
   const weekPlan = getWeeklyPlan(currentWeek)
+  
+  // 当周改变时，重置selectedDayIndex
+  useEffect(() => {
+    const newWeekPlan = getWeeklyPlan(currentWeek)
+    if (newWeekPlan) {
+      // 如果是当前周且今天在这周内，跳转到今天
+      if (todayData && todayData.weekNumber === currentWeek) {
+        setSelectedDayIndex(todayData.dayIndex)
+      } else {
+        setSelectedDayIndex(0)
+      }
+    }
+  }, [currentWeek, todayData])
   
   if (!weekPlan) {
     return (
@@ -49,7 +65,29 @@ export default function WeeklyPlanPage() {
 
   const handleWeekChange = (newWeek: number) => {
     setCurrentWeek(newWeek)
-    setSelectedDayIndex(0)
+  }
+  
+  // 日期选择处理
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = new Date(e.target.value)
+    const mealData = getMealByDate(date)
+    if (mealData) {
+      setCurrentWeek(mealData.weekNumber)
+      setSelectedDayIndex(mealData.dayIndex)
+    }
+  }
+  
+  // 获取当前选中日期
+  const getSelectedDateString = () => {
+    if (!weekPlan) return ''
+    const meal = weekPlan.meals[selectedDayIndex]
+    const dateMatch = meal.date.match(/(\d+)月(\d+)日/)
+    if (dateMatch) {
+      const month = dateMatch[1].padStart(2, '0')
+      const day = dateMatch[2].padStart(2, '0')
+      return `2026-${month}-${day}`
+    }
+    return ''
   }
 
   return (
@@ -62,25 +100,52 @@ export default function WeeklyPlanPage() {
         </div>
         
         {/* Week Navigation */}
-        <div className="flex items-center justify-center gap-4 mb-8">
-          <button
-            onClick={() => handleWeekChange(Math.max(1, currentWeek - 1))}
-            disabled={currentWeek === 1}
-            className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <div className="recipe-card px-8 py-3">
-            <div className="font-bold text-lg">2026年 · 第{currentWeek}周</div>
-            <div className="text-sm text-muted-foreground">{weekPlan.dateRange}</div>
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => handleWeekChange(Math.max(1, currentWeek - 1))}
+              disabled={currentWeek === 1}
+              className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <div className="recipe-card px-8 py-3">
+              <div className="font-bold text-lg">2026年 · 第{currentWeek}周</div>
+              <div className="text-sm text-muted-foreground">{weekPlan.dateRange}</div>
+            </div>
+            <button
+              onClick={() => handleWeekChange(Math.min(9, currentWeek + 1))}
+              disabled={currentWeek >= 9}
+              className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
-          <button
-            onClick={() => handleWeekChange(Math.min(9, currentWeek + 1))}
-            disabled={currentWeek >= 9}
-            className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
+          
+          {/* 日期选择器 */}
+          <div className="flex items-center gap-2">
+            <CalendarDays className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">快速跳转:</span>
+            <input
+              type="date"
+              value={getSelectedDateString()}
+              onChange={handleDateChange}
+              min="2026-01-01"
+              max="2026-02-28"
+              className="px-3 py-1.5 rounded-lg border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            {todayData && (currentWeek !== todayData.weekNumber || selectedDayIndex !== todayData.dayIndex) && (
+              <button 
+                onClick={() => {
+                  setCurrentWeek(todayData.weekNumber)
+                  setSelectedDayIndex(todayData.dayIndex)
+                }}
+                className="text-xs text-primary hover:underline"
+              >
+                返回今天
+              </button>
+            )}
+          </div>
         </div>
         
         {/* Tab Switcher */}
