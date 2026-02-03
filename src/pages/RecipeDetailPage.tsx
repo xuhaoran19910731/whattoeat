@@ -76,13 +76,18 @@ export default function RecipeDetailPage() {
           {/* Image */}
           <div className="relative h-64 md:h-72 bg-gradient-to-br from-primary/20 to-primary/5 overflow-hidden">
             <img 
-              src={`/images/recipes/${recipe.id}.png`}
+              src={`/images/recipes/${recipe.id}.jpeg`}
               alt={recipe.name}
               className="absolute inset-0 w-full h-full object-cover"
               onError={(e) => {
                 const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-                target.nextElementSibling?.classList.remove('hidden')
+                // 如果jpeg失败，尝试png
+                if (target.src.endsWith('.jpeg')) {
+                  target.src = `/images/recipes/${recipe.id}.png`
+                } else {
+                  target.style.display = 'none'
+                  target.nextElementSibling?.classList.remove('hidden')
+                }
               }}
             />
             <div className="hidden absolute inset-0 flex items-center justify-center">
