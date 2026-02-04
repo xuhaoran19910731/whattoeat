@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Sun, Moon, ShoppingCart, Check, Copy, Printer, Clock, Flame, Store, CalendarDays } from 'lucide-react'
 import { getWeeklyPlan, categorizeShoppingList, getRecipeSupermarketMatch, isIngredientInSupermarket, getBerlinDate, getMealByDate, type Recipe } from '../data'
 import { cn } from '../lib/utils'
@@ -11,18 +11,45 @@ const stapleLabels = {
 }
 
 export default function WeeklyPlanPage() {
-  const berlinDate = getBerlinDate()
-  const todayData = getMealByDate(berlinDate)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const berlinDate = useMemo(() => getBerlinDate(), [])
+  const todayData = useMemo(() => getMealByDate(berlinDate), [berlinDate])
   
-  const [currentWeek, setCurrentWeek] = useState(todayData?.weekNumber || 1)
+  // 从URL参数获取初始日期
+  const urlDate = searchParams.get('date')
+  const initialMealData = urlDate ? getMealByDate(new Date(urlDate)) : todayData
+  
+  const [currentWeek, setCurrentWeek] = useState(initialMealData?.weekNumber || todayData?.weekNumber || 1)
   const [activeTab, setActiveTab] = useState<'meals' | 'shopping'>('meals')
-  const [selectedDayIndex, setSelectedDayIndex] = useState(todayData?.dayIndex || 0)
+  const [selectedDayIndex, setSelectedDayIndex] = useState(initialMealData?.dayIndex || todayData?.dayIndex || 0)
   const [copiedList, setCopiedList] = useState(false)
+  
+  // 使用ref来追踪是否跳过下一次自动重置（避免state导致的重复渲染）
+  const skipNextResetRef = useRef(!!urlDate)
   
   const weekPlan = getWeeklyPlan(currentWeek)
   
-  // 当周改变时，重置selectedDayIndex
+  // 处理URL参数变化
   useEffect(() => {
+    if (urlDate) {
+      const mealData = getMealByDate(new Date(urlDate))
+      if (mealData) {
+        skipNextResetRef.current = true
+        setCurrentWeek(mealData.weekNumber)
+        setSelectedDayIndex(mealData.dayIndex)
+      }
+      // 清除URL参数，保持URL干净
+      setSearchParams({}, { replace: true })
+    }
+  }, [urlDate, setSearchParams])
+  
+  // 当周改变时，重置selectedDayIndex（仅当不是手动选择时）
+  useEffect(() => {
+    if (skipNextResetRef.current) {
+      // 跳过这次重置
+      skipNextResetRef.current = false
+      return
+    }
     const newWeekPlan = getWeeklyPlan(currentWeek)
     if (newWeekPlan) {
       // 如果是当前周且今天在这周内，跳转到今天
@@ -72,6 +99,7 @@ export default function WeeklyPlanPage() {
     const date = new Date(e.target.value)
     const mealData = getMealByDate(date)
     if (mealData) {
+      skipNextResetRef.current = true
       setCurrentWeek(mealData.weekNumber)
       setSelectedDayIndex(mealData.dayIndex)
     }

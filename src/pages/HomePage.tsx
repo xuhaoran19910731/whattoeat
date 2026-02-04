@@ -237,26 +237,37 @@ export default function HomePage() {
             </div>
             
             <div className="grid lg:grid-cols-7 gap-4 mb-8">
-              {week1.meals.slice(0, 7).map((meal, index) => (
-                <div key={index} className="recipe-card p-4 animate-scale-in" style={{ animationDelay: `${index * 50}ms` }}>
-                  <div className="text-center mb-3">
-                    <div className="text-xs text-muted-foreground">{meal.weekday}</div>
-                    <div className="font-bold text-sm">{meal.date}</div>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="p-2 bg-secondary/10 rounded-lg">
-                      <div className="text-xs text-secondary font-medium mb-1">午餐</div>
-                      <div className="font-medium truncate">{meal.lunch.main.name}</div>
-                      <div className="text-muted-foreground truncate">{meal.lunch.side.name}</div>
+              {week1.meals.slice(0, 7).map((meal, index) => {
+                // 从日期字符串解析日期用于链接
+                const dateMatch = meal.date.match(/(\d+)月(\d+)日/)
+                const linkDate = dateMatch ? `2026-${dateMatch[1].padStart(2, '0')}-${dateMatch[2].padStart(2, '0')}` : ''
+                
+                return (
+                  <Link 
+                    key={index} 
+                    to={`/weekly?date=${linkDate}`}
+                    className="recipe-card p-4 animate-scale-in hover:shadow-lg transition-shadow cursor-pointer" 
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <div className="text-center mb-3">
+                      <div className="text-xs text-muted-foreground">{meal.weekday}</div>
+                      <div className="font-bold text-sm">{meal.date}</div>
                     </div>
-                    <div className="p-2 bg-winter/10 rounded-lg">
-                      <div className="text-xs text-winter font-medium mb-1">晚餐</div>
-                      <div className="font-medium truncate">{meal.dinner.main.name}</div>
-                      <div className="text-muted-foreground truncate">{meal.dinner.side.name}</div>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-2 bg-secondary/10 rounded-lg">
+                        <div className="text-xs text-secondary font-medium mb-1">午餐</div>
+                        <div className="font-medium truncate">{meal.lunch.main.name}</div>
+                        <div className="text-muted-foreground truncate">{meal.lunch.side.name}</div>
+                      </div>
+                      <div className="p-2 bg-winter/10 rounded-lg">
+                        <div className="text-xs text-winter font-medium mb-1">晚餐</div>
+                        <div className="font-medium truncate">{meal.dinner.main.name}</div>
+                        <div className="text-muted-foreground truncate">{meal.dinner.side.name}</div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  </Link>
+                )
+              })}
             </div>
             
             <div className="text-center">

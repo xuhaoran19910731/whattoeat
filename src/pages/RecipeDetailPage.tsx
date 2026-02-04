@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Clock, Flame, ChefHat, CheckCircle2, Circle } from 'lucide-react'
+import { ArrowLeft, Clock, Flame, ChefHat, CheckCircle2, Circle, BookOpen, Lightbulb } from 'lucide-react'
 import { getRecipeById } from '../data'
+import { getFunFactByDish, getNutritionFactsByIngredients } from '../data/nutrition-facts'
 import { cn } from '../lib/utils'
 import { useState } from 'react'
 
@@ -58,6 +59,11 @@ export default function RecipeDetailPage() {
     if (!ingredientsByCategory[cat]) ingredientsByCategory[cat] = []
     ingredientsByCategory[cat].push(ing)
   })
+  
+  // 获取营养知识和趣味文化
+  const ingredientNames = recipe.ingredients.map(ing => ing.name)
+  const nutritionFacts = getNutritionFactsByIngredients(ingredientNames)
+  const funFact = getFunFactByDish(recipe.name)
 
   return (
     <div className="min-h-screen py-8">
@@ -263,6 +269,77 @@ export default function RecipeDetailPage() {
             </div>
           </div>
         </div>
+        
+        {/* 营养知识和趣味文化 */}
+        {(nutritionFacts.length > 0 || funFact) && (
+          <div className="mt-8 space-y-6">
+            {/* 趣味文化知识 */}
+            {funFact && (
+              <div className="recipe-card p-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  <Lightbulb className="w-6 h-6 text-amber-500" />
+                  <span className="gradient-text">{funFact.title}</span>
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-3">
+                  {funFact.content}
+                </p>
+                {funFact.source && (
+                  <p className="text-xs text-muted-foreground/70 flex items-center gap-1">
+                    <BookOpen className="w-3 h-3" />
+                    来源：{funFact.source}
+                  </p>
+                )}
+              </div>
+            )}
+            
+            {/* 食材营养知识 */}
+            {nutritionFacts.length > 0 && (
+              <div className="recipe-card p-6">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🔬</span>
+                  食材营养解读
+                </h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {nutritionFacts.map((fact, index) => (
+                    <div key={index} className="p-4 bg-muted/50 rounded-xl">
+                      <h3 className="font-bold text-lg mb-2 text-primary">{fact.ingredient}</h3>
+                      
+                      <div className="mb-3">
+                        <div className="text-xs font-medium text-muted-foreground mb-1">主要营养</div>
+                        <div className="flex flex-wrap gap-1">
+                          {fact.nutrients.slice(0, 3).map((nutrient, i) => (
+                            <span key={i} className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded">
+                              {nutrient}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="mb-2">
+                        <div className="text-xs font-medium text-muted-foreground mb-1">健康益处</div>
+                        <ul className="text-sm text-muted-foreground space-y-0.5">
+                          {fact.benefits.slice(0, 2).map((benefit, i) => (
+                            <li key={i} className="flex items-start gap-1">
+                              <span className="text-spring">✓</span>
+                              {benefit}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      {fact.source && (
+                        <p className="text-xs text-muted-foreground/60 mt-2 flex items-center gap-1">
+                          <BookOpen className="w-3 h-3" />
+                          {fact.source}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
