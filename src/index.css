@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core Colors - Fresh Green Theme */
+    --background: 60 30% 98%;
+    --foreground: 142 20% 15%;
+    
+    /* Primary - Vibrant Green */
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 142 70% 50%;
+    --primary-dark: 142 80% 28%;
+    
+    /* Secondary - Warm Orange */
+    --secondary: 32 95% 55%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Accent - Golden Yellow */
+    --accent: 45 93% 58%;
+    --accent-foreground: 45 20% 15%;
+    
+    /* Muted */
+    --muted: 120 15% 94%;
+    --muted-foreground: 142 10% 45%;
+    
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 142 20% 15%;
+    
+    /* Border & Ring */
+    --border: 142 20% 88%;
+    --ring: 142 76% 36%;
+    
+    /* Seasonal Colors */
+    --spring: 142 76% 42%;
+    --summer: 45 93% 55%;
+    --autumn: 25 95% 53%;
+    --winter: 210 85% 55%;
+    
+    /* Border Radius */
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Button Variants */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground hover:bg-primary-dark shadow-soft hover:shadow-glow hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-secondary text-secondary-foreground hover:opacity-90 shadow-soft;
+  }
+  
+  .btn-outline {
+    @apply btn border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground;
+  }
+  
+  .btn-ghost {
+    @apply btn hover:bg-muted text-foreground;
+  }
+  
+  /* Card Styles */
+  .recipe-card {
+    @apply bg-card rounded-2xl overflow-hidden shadow-card transition-all duration-500 hover:shadow-glow hover:-translate-y-2;
+  }
+  
+  /* Season Badges */
+  .badge-spring {
+    @apply bg-gradient-spring text-primary-foreground;
+  }
+  
+  .badge-summer {
+    @apply bg-gradient-summer text-primary-foreground;
+  }
+  
+  .badge-autumn {
+    @apply bg-gradient-autumn text-primary-foreground;
+  }
+  
+  .badge-winter {
+    @apply bg-gradient-winter text-primary-foreground;
+  }
+  
+  /* Nutrition Tags */
+  .nutrition-tag {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-muted text-muted-foreground;
+  }
+  
+  /* Section Styles */
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-foreground mb-4;
+  }
+  
+  .section-subtitle {
+    @apply text-lg text-muted-foreground max-w-2xl;
+  }
+  
+  /* Glass Effect */
+  .glass {
+    @apply bg-card/80 backdrop-blur-lg;
+  }
+  
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
+}
+
+/* Selection */
+::selection {
+  @apply bg-primary/20 text-foreground;
+}
+
+/* Mobile Safe Area */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Hide scrollbar for mobile bottom nav */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
